@@ -180,12 +180,12 @@ mode = [
     [rainbow, 'n', 'n'],   # 2: Rainbow mode
     [pulse, 'y', 'n'],     # 3: Pulse/Breath mode - Can change color
     [sparkle, 'y', 'n'],   # 4: Sparkle mode - Can change color
-    # [p_sparkle, 'y', 'n'], # 5: Pulse Sparkle mode - Can change color
-    [r_sparkle, 'n', 'n'], # 6: Rainbow Sparkle mode
-    [c_scan, 'y', 'n'],    # 7: Line Scan mode - Can change color
-    [h_scan, 'y', 'n'],    # 8: Grid Scan mode - Can change color
-    [lightning_list[0], 'y', 'n'],  # 9: Lightning mode - Can change color
-    [wth_list[w_index], 'n', 'n']
+    # [p_sparkle, 'y', 'n'], # N: Pulse Sparkle mode - Can change color
+    [r_sparkle, 'n', 'n'], # 5: Rainbow Sparkle mode
+    [c_scan, 'y', 'n'],    # 6: Line Scan mode - Can change color
+    [h_scan, 'y', 'n'],    # 7: Grid Scan mode - Can change color
+    [lightning_list[0], 'y', 'n'],  # 8: Lightning mode - Can change color
+    [wth_list[w_index], 'n', 'n']   # 9: Weather demo mode - can cycle between patterns
 ]
 
 # Helper functions
@@ -261,6 +261,7 @@ try:
                 if new_idx > (len(wth_list) - 1):
                    new_idx = 0
                 mode[curr_mode][0] = wth_list[new_idx]
+                w_index = new_idx
         elif pressed == 'Left':
             if curr_mode != 9:
                 if mode[curr_mode][1] == 'y':
@@ -271,6 +272,7 @@ try:
                 if new_idx < 0:
                    new_idx = (len(wth_list) - 1)
                 mode[curr_mode][0] = wth_list[new_idx]
+                w_index = new_idx
         elif pressed == 'Up':
             if mode[curr_mode][2] == 'y':
                 myColor.incIntensity()
