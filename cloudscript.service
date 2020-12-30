@@ -1,0 +1,15 @@
+[Unit]
+Description=AP Cloud Service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 -u code_main.py
+WorkingDirectory=/home/pi/cloud
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
+
