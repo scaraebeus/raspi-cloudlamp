@@ -1,3 +1,15 @@
+"""
+raspi-cloudlamp v0.1
+By Scaraebeus (Alex P)
+
+Interactive cloud lamp built on the Raspberry PI platform.
+
+TODO:
+* Add license info - ensure all 3rd party code/licenses are
+  appropriately credited
+
+"""
+
 # Standard library imports
 from random import randint
 import sys
@@ -46,25 +58,28 @@ logger = logging.getLogger("cloud")
 logger.setLevel(logging.INFO)
 
 # Setup Weather class
-logger.info("Initiating myWeather . . .")
+logger.info("Initiating Weather . . .")
 myWeather = weather.Weather()
-logger.info("myWeather initiated.")
 
 # Setup IR remote
+logging.info("Initiating IRRemote . . .")
 myRemote = remote.IRRemote(mapping)
 
 # Setup neopixels
+logging.info("Initiating NeoPixels . . .")
 pixel_pin = board.D18
 pixel_num = 48
 pixels = neopixel.NeoPixel(pixel_pin, pixel_num, brightness=0.5, auto_write=False)
 
 # Setup ColorHandler
+logging.info("Initiating ColorHandler . . .")
 myColor = colorhandler.ColorHandler()
 
 # Setup Pixel Groups
 rain_pixel_start = 32
 rain_pixel_end = 48
 rain_pixels = PixelSubset(pixels, rain_pixel_start, rain_pixel_end)
+
 cross_strips = PixelMap(
     pixels,
     [
@@ -83,10 +98,12 @@ cross_strips = PixelMap(
     ],
     individual_pixels=True,
 )
+
 hatch_strips = PixelMap(
     pixels,
     [(24, 32), (16, 24), (8, 16), (0, 8), (44, 48), (40, 44), (36, 40), (32, 36)],
 )
+
 sunny75 = PixelSubset(pixels, 8, 32)
 sunny50 = PixelSubset(pixels, 16, 32)
 sunny25 = PixelSubset(pixels, 24, 32)
@@ -94,26 +111,33 @@ cloudy75 = PixelMap(pixels, [(32, 48), (0, 24)])
 cloudy50 = PixelMap(pixels, [(32, 48), (0, 16)])
 cloudy25 = PixelMap(pixels, [(32, 48), (0, 8)])
 top_half = PixelSubset(pixels, 0, 32)
+
+# Lightning Animations
+# TODO: Move all of the lightning animation stuff to its own module
 lightning_path_1 = PixelMap(
     pixels, [26, 28, 30, 19, 11, 2, 46, 42, 38], individual_pixels=True
 )
+
 lightning_path_2 = PixelMap(
     pixels, [41, 45, 4, 13, 20, 25, 27, 33], individual_pixels=True
 )
+
 lightning_path_3 = PixelMap(
     pixels, [39, 31, 29, 18, 11, 7, 45, 41], individual_pixels=True
 )
 
-# Lightning Animations
 lightningflash = LightningFlash(
     pixels, lower_speed=0.05, upper_speed=0.1, num_pixels=12, color=WHITE
 )
+
 lightningstreak1 = Comet(
     lightning_path_1, speed=0.03, color=WHITE, tail_length=3, bounce=False
 )
+
 lightningstreak2 = Comet(
     lightning_path_2, speed=0.03, color=WHITE, tail_length=3, bounce=False
 )
+
 lightningstreak3 = Comet(
     lightning_path_3, speed=0.03, color=WHITE, tail_length=3, bounce=False
 )
@@ -126,6 +150,7 @@ lightningseq1 = AnimationSequence(
     auto_reset=True,
     advance_on_cycle_complete=True,
 )
+
 lightningseq2 = AnimationSequence(
     lightningstreak1,
     lightningflash,
@@ -133,6 +158,7 @@ lightningseq2 = AnimationSequence(
     auto_reset=True,
     advance_on_cycle_complete=True,
 )
+
 lightningseq3 = AnimationSequence(
     lightningflash,
     lightningstreak3,
@@ -140,6 +166,7 @@ lightningseq3 = AnimationSequence(
     auto_reset=True,
     advance_on_cycle_complete=True,
 )
+
 lightningseq4 = AnimationSequence(
     lightningstreak2,
     lightningflash,
@@ -148,6 +175,7 @@ lightningseq4 = AnimationSequence(
     auto_reset=True,
     advance_on_cycle_complete=True,
 )
+
 lightningseq5 = AnimationSequence(
     lightningstreak3,
     lightningflash,
@@ -156,6 +184,7 @@ lightningseq5 = AnimationSequence(
     auto_reset=True,
     advance_on_cycle_complete=True,
 )
+
 lightningseq6 = AnimationSequence(
     lightningflash,
     lightningflash,
@@ -178,6 +207,7 @@ lightning_list = [
 ]
 
 # Weather Animations
+# TODO: Move the weather animations to their own module
 DULL_WHITE = calculate_intensity(WHITE, 0.1)
 clearday = Solid(pixels, color=YELLOW)
 cloud25 = AnimationGroup(
