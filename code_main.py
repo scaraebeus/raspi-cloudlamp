@@ -32,21 +32,14 @@ from adafruit_led_animation.sequence import AnimationSequence, AnimateOnce
 import board
 import neopixel
 
-sys.path.append(r"/home/pi/cloud/lib")
-
 # Application library imports
-import remote_v0_2 as remote
-import weather
+import remote.remote_v0_2 as remote
+import weather.weather
 import adafruit_logging as logging
-
-# from adafruit_remote_mapping import mapping
-from adafruit_remote_mapping import mapping2 as mapping
+from remote.adafruit_remote_mapping import mapping2 as mapping
 from mysecrets import secrets
-import colorhandler
-
+import cloud_animations.colorhandler
 from cloud_animations.lightningflash import LightningFlash
-
-
 
 # Create and setup logger
 logger = logging.getLogger("cloud")
@@ -170,12 +163,6 @@ lightningseq6 = AnimationSequence(
     auto_reset=True,
     advance_on_cycle_complete=True,
 )
-
-# lightningseq1.add_cycle_complete_receiver(anim_pauser)
-# lightningseq2.add_cycle_complete_receiver(anim_pauser)
-# lightningseq3.add_cycle_complete_receiver(anim_pauser)
-# lightningseq4.add_cycle_complete_receiver(anim_pauser)
-# lightningseq5.add_cycle_complete_receiver(anim_pauser)
 
 lightning_list = [
     lightningseq1,
