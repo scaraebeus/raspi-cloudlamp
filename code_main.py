@@ -31,10 +31,7 @@ from adafruit_led_animation.color import (
     PURPLE,
     BLUE,
     WHITE,
-    AMBER,
     JADE,
-    MAGENTA,
-    ORANGE,
     BLACK,
     calculate_intensity,
 )
@@ -271,7 +268,6 @@ wth_demo = AnimationSequence(
 )
 
 wth_list = [clearday, cloud25, cloud50, cloud75, cloud100, rain, snow]
-w_index = 0
 
 # Setup modes and weather_anim
 weather_anim = {
@@ -299,13 +295,14 @@ mode = [
     [c_scan, "y", "n"],  # 6: Line Scan mode - Can change color
     [h_scan, "y", "n"],  # 7: Grid Scan mode - Can change color
     [lightning_list[0], "y", "n"],  # 8: Lightning mode - Can change color
-    [wth_list[w_index], "n", "n"],  # 9: Weather demo mode - can cycle between patterns
+    [wth_list[0], "n", "n"],  # 9: Weather demo mode - can cycle between patterns
 ]
 
 if myWeather.current != "Clouds":
     mode[0][0] = weather_anim[str(myWeather.id)[0] + "00"]
 else:
     mode[0][0] = weather_anim[str(myWeather.id)]
+
 
 def main():
     # Some basic initializing
@@ -315,7 +312,8 @@ def main():
     max_mode = len(mode) - 1
     last_mode = curr_mode
     next_update = monotonic()
-    
+    w_index = 0
+
     logger.info("Starting main loop")
     try:
         while True:
@@ -343,7 +341,9 @@ def main():
                     now = monotonic()
                     if now >= next_update:
                         mode[8][0].cycle_count = 0
-                        mode[8][0] = lightning_list[randint(0, (len(lightning_list) - 1))]
+                        mode[8][0] = lightning_list[
+                            randint(0, (len(lightning_list) - 1))
+                        ]
                         next_update = now + randint(1, 5)
                     if mode[8][0].cycle_count >= 3:
                         reset_strip.animate()
@@ -407,11 +407,13 @@ def main():
         board.pin.GPIO.cleanup()
         print("Exiting Cloud App.")
 
+
 # Helper functions
 def sigterm_handler(_signo, _stack_frame):
     sys.exit(0)
 
+
 signal.signal(signal.SIGTERM, sigterm_handler)
 
-if __name__ == __main__:
+if __name__ == "__main__":
     main()
