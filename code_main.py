@@ -49,7 +49,7 @@ import remote.remote as remote
 import weather.weather as weather
 import adafruit_logging as logging
 from remote.adafruit_remote_mapping import mapping
-from mysecrets import secrets
+from secrets import secrets
 import cloud_animations.colorhandler as colorhandler
 from cloud_animations.lightningflash import LightningFlash
 
@@ -59,7 +59,11 @@ logger.setLevel(logging.INFO)
 
 # Setup Weather class
 logger.info("Initiating Weather . . .")
-myWeather = weather.Weather()
+try:
+    myWeather = weather.Weather(appid=secrets["ow_appid"])
+except KeyError:
+    logger.warning("ow_appid not set in secrets file - No API Key specified")
+    myWeather = weather.Weather()
 
 # Setup IR remote
 logger.info("Initiating IRRemote . . .")

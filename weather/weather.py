@@ -1,10 +1,10 @@
 """
-Weather handler for APCloudLight 2020
+Weather handler for raspi-cloudlamp
+Module ver: v0.1
 """
 
 # Imports
 import time
-from mysecrets import secrets
 import adafruit_logging as logging
 import requests
 
@@ -23,7 +23,7 @@ class Weather(object):
         zipcode="97007",
         country="us",
         interval=3600,
-        appid=secrets["ow_appid"],
+        appid=None,
     ):
         """(Weather, Wifi, str, str, int, str) -> NoneType
 
@@ -114,8 +114,9 @@ class Weather(object):
         Sets the self._appid variable of the Weather object to the provided value
         """
 
-        # Need some value checking code here
         self.log.debug(f"Setting appid: {value}")
+        if value == None:
+            self.log.warning("No API Key provided")
         self._appid = value
 
     @property
@@ -159,6 +160,12 @@ class Weather(object):
             return False
 
         self.log.info("Calling Weather.update() - enough time has passed")
+
+        if self.appid == None:
+            self.log.warning("API Key not set - defaulting to clear condition")
+            self.current = "Clear"
+            self.id = "800"
+            return False
 
         url = (
             "https://api.openweathermap.org/data/2.5/weather?units=imperial&zip="
