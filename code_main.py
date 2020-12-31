@@ -48,7 +48,7 @@ import neopixel
 import remote.remote as remote
 import weather.weather as weather
 import adafruit_logging as logging
-from remote.adafruit_remote_mapping import mapping2 as mapping
+from remote.adafruit_remote_mapping import mapping
 from mysecrets import secrets
 import cloud_animations.colorhandler as colorhandler
 from cloud_animations.lightningflash import LightningFlash

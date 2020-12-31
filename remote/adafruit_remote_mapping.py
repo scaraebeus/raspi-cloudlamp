@@ -1,5 +1,6 @@
-# Mapping for remote (using Adafruit mini-remote (NEC style)
-mapping = {
+# Mapping for remote (using Adafruit mini-remote (NEC style))
+# Leaving this for now as reference for the hex codes
+mapping_unused = {
     "0xbf09": "Enter",
     "0xbf08": "Left",
     "0xbf0a": "Right",
@@ -23,7 +24,7 @@ mapping = {
     "0xbf01": "Play",
 }
 
-mapping2 = {
+mapping = {
     "KEY_VOLUMEDOWN": "Vol_down",
     "KEY_PLAYPAUSE": "Play",
     "KEY_VOLUMEUP": "Vol_up",
