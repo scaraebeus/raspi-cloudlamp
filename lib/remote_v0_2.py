@@ -1,33 +1,34 @@
-'''
+"""
 Remote handler for APCloudLight 2020
-'''
+"""
 
 # Imports
 from evdev import InputDevice, categorize, ecodes
 import adafruit_logging as logging
 
 # Create and setup logger
-remlog = logging.getLogger('cloud.remote')
+remlog = logging.getLogger("cloud.remote")
+
 
 class IRRemote(object):
-    ''' Class for the IRRemote object
+    """Class for the IRRemote object
 
-        Use:
-            remote = IRRemote(board.PIN, button_mapping)
+    Use:
+        remote = IRRemote(board.PIN, button_mapping)
+        remote.enable()
+        while True:
+            while(not remote.received())
+                pass
+            if remote.decode():
+                print('Decoded signal matching protocol and mapped to mapping')
+                print(remote.pressed)
+            else:
+                print('Unknown or unmapped signal')
             remote.enable()
-            while True:
-                while(not remote.received())
-                    pass
-                if remote.decode():
-                    print('Decoded signal matching protocol and mapped to mapping')
-                    print(remote.pressed)
-                else:
-                    print('Unknown or unmapped signal')
-                remote.enable()
-    '''
+    """
 
-    def __init__(self, mapping, input_device = '/dev/input/event0'):
-        ''' Initialize IRRemote class
+    def __init__(self, mapping, input_device="/dev/input/event0"):
+        """Initialize IRRemote class
 
         param:pin       The pin for the IR Receiver using board.PIN format
         param:mapping   A dictionary of key:value pairs with the key being
@@ -35,20 +36,19 @@ class IRRemote(object):
                         the value being the friendly button name
         param:protocol  The protocol that the remote should be using to decode
                         the pulses. Default is NEC
-        '''
+        """
 
-        self.log = logging.getLogger('cloud.remote.IRRemote')
+        self.log = logging.getLogger("cloud.remote.IRRemote")
         self.log.setLevel(logging.INFO)
-        self.log.info('Creating instance of IRRemote Class.')
+        self.log.info("Creating instance of IRRemote Class.")
         self._event = None
         self.pressed = None
         self.mapping = mapping
         self._device = InputDevice(input_device)
 
-
     @property
     def pressed(self):
-        ''' Returns the name of the key pressed as a string based on the provided mapping '''
+        """ Returns the name of the key pressed as a string based on the provided mapping """
         return self._pressed
 
     @pressed.setter
@@ -57,16 +57,18 @@ class IRRemote(object):
 
     # Class functions
     def received(self):
-        ''' Checks to see if a remote button press was recieved and returns True if so '''
-        self.log.debug('Calling received()')
+        """ Checks to see if a remote button press was recieved and returns True if so """
+        self.log.debug("Calling received()")
         evt = self._device.read_one()
-        while (evt != None):
+        while evt != None:
             if evt.type != ecodes.EV_KEY:
                 evt = self._device.read_one()
                 continue
             event = str(categorize(evt))
-            if ('up' in event[-2:]):
-                self.pressed = self.mapping[event.split()[5].strip(',').strip('(').strip(')')]
+            if "up" in event[-2:]:
+                self.pressed = self.mapping[
+                    event.split()[5].strip(",").strip("(").strip(")")
+                ]
                 return True
 
             evt = self._device.read_one()

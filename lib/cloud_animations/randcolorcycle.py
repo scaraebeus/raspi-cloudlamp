@@ -57,7 +57,15 @@ class RandColorCycle(Animation):
                    format. Defaults to a rainbow color cycle.
     """
 
-    def __init__(self, pixel_object, lower_speed, upper_speed, num_pixels=1, colors=RAINBOW, name=None):
+    def __init__(
+        self,
+        pixel_object,
+        lower_speed,
+        upper_speed,
+        num_pixels=1,
+        colors=RAINBOW,
+        name=None,
+    ):
         self.colors = colors
         super().__init__(pixel_object, upper_speed, colors[0], name=name)
         self._generator = self._color_generator()
@@ -91,7 +99,7 @@ class RandColorCycle(Animation):
             random.randint(0, (len(self.pixel_object) - 1))
             for _ in range(self._num_pixels)
         ]
-        animation.notify_cycles = random.randint(1,5)
+        animation.notify_cycles = random.randint(1, 5)
 
     def reset(self):
         """

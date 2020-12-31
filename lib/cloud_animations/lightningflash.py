@@ -49,8 +49,17 @@ class LightningFlash(RandColorCycle):
     :param color: Animation color in ``(r, g, b)`` tuple, or ``0x000000`` hex format.
     """
 
-    def __init__(self, pixel_object, lower_speed, upper_speed, num_pixels, color, name=None):
-        super().__init__(pixel_object, lower_speed, upper_speed, num_pixels, [color, BLACK], name=name)
+    def __init__(
+        self, pixel_object, lower_speed, upper_speed, num_pixels, color, name=None
+    ):
+        super().__init__(
+            pixel_object,
+            lower_speed,
+            upper_speed,
+            num_pixels,
+            [color, BLACK],
+            name=name,
+        )
 
     def _set_color(self, color):
         self.colors = [color, BLACK]
