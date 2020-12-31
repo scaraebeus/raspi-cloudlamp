@@ -302,112 +302,116 @@ mode = [
     [wth_list[w_index], "n", "n"],  # 9: Weather demo mode - can cycle between patterns
 ]
 
-# Helper functions
-def sigterm_handler(_signo, _stack_frame):
-    sys.exit(0)
-
-
-signal.signal(signal.SIGTERM, sigterm_handler)
-
-# Some basic initializing
-is_enabled = True
-reset_strip.animate()
-curr_mode = 0
-max_mode = len(mode) - 1
-last_mode = curr_mode
-next_update = monotonic()
 if myWeather.current != "Clouds":
     mode[0][0] = weather_anim[str(myWeather.id)[0] + "00"]
 else:
     mode[0][0] = weather_anim[str(myWeather.id)]
 
-logger.info("Starting main loop")
-try:
-    while True:
-        while not myRemote.received():
-            if not is_enabled:
-                sleep(1)
-                continue
-            if curr_mode == 0:
-                logger.debug("Current mode is weather")
-                if myWeather.update():
-                    logger.info(
-                        f"Changing animation due to new weather: {myWeather.current}"
-                    )
-                    if myWeather.current != "Clouds":
-                        mode[0][0] = weather_anim[str(myWeather.id)[0] + "00"]
-                    else:
-                        mode[0][0] = weather_anim[str(myWeather.id)]
-
-            if curr_mode != last_mode:
-                reset_strip.animate()
-                mode[last_mode][0].reset()
-                last_mode = curr_mode
-
-            if curr_mode == 8 or (curr_mode == 0 and str(myWeather.id)[0] == "2"):
-                now = monotonic()
-                if now >= next_update:
-                    mode[8][0].cycle_count = 0
-                    mode[8][0] = lightning_list[randint(0, (len(lightning_list) - 1))]
-                    next_update = now + randint(1, 5)
-                if mode[8][0].cycle_count >= 3:
-                    reset_strip.animate()
+def main():
+    # Some basic initializing
+    is_enabled = True
+    reset_strip.animate()
+    curr_mode = 0
+    max_mode = len(mode) - 1
+    last_mode = curr_mode
+    next_update = monotonic()
+    
+    logger.info("Starting main loop")
+    try:
+        while True:
+            while not myRemote.received():
+                if not is_enabled:
+                    sleep(1)
                     continue
-                mode[8][0].animate()
-                continue
+                if curr_mode == 0:
+                    logger.debug("Current mode is weather")
+                    if myWeather.update():
+                        logger.info(
+                            f"Changing animation due to new weather: {myWeather.current}"
+                        )
+                        if myWeather.current != "Clouds":
+                            mode[0][0] = weather_anim[str(myWeather.id)[0] + "00"]
+                        else:
+                            mode[0][0] = weather_anim[str(myWeather.id)]
 
-            mode[curr_mode][0].animate()
+                if curr_mode != last_mode:
+                    reset_strip.animate()
+                    mode[last_mode][0].reset()
+                    last_mode = curr_mode
 
-        logger.info(f"myRemote.received() returned True.  Key: {myRemote.pressed}")
-        pressed = myRemote.pressed
-        if pressed == "Mode":
-            last_mode = curr_mode
-            if curr_mode == max_mode:
-                curr_mode = 0
-            else:
-                curr_mode += 1
-        elif pressed in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
-            curr_mode = int(pressed)
-        elif pressed == "Right":
-            if curr_mode != 9:
-                if mode[curr_mode][1] == "y":
-                    myColor.nextColor()
+                if curr_mode == 8 or (curr_mode == 0 and str(myWeather.id)[0] == "2"):
+                    now = monotonic()
+                    if now >= next_update:
+                        mode[8][0].cycle_count = 0
+                        mode[8][0] = lightning_list[randint(0, (len(lightning_list) - 1))]
+                        next_update = now + randint(1, 5)
+                    if mode[8][0].cycle_count >= 3:
+                        reset_strip.animate()
+                        continue
+                    mode[8][0].animate()
+                    continue
+
+                mode[curr_mode][0].animate()
+
+            logger.info(f"myRemote.received() returned True.  Key: {myRemote.pressed}")
+            pressed = myRemote.pressed
+            if pressed == "Mode":
+                last_mode = curr_mode
+                if curr_mode == max_mode:
+                    curr_mode = 0
+                else:
+                    curr_mode += 1
+            elif pressed in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+                curr_mode = int(pressed)
+            elif pressed == "Right":
+                if curr_mode != 9:
+                    if mode[curr_mode][1] == "y":
+                        myColor.nextColor()
+                        mode[curr_mode][0].color = myColor.color
+                else:
+                    new_idx = w_index + 1
+                    if new_idx > (len(wth_list) - 1):
+                        new_idx = 0
+                    mode[curr_mode][0] = wth_list[new_idx]
+                    w_index = new_idx
+            elif pressed == "Left":
+                if curr_mode != 9:
+                    if mode[curr_mode][1] == "y":
+                        myColor.prevColor()
+                        mode[curr_mode][0].color = myColor.color
+                else:
+                    new_idx = w_index - 1
+                    if new_idx < 0:
+                        new_idx = len(wth_list) - 1
+                    mode[curr_mode][0] = wth_list[new_idx]
+                    w_index = new_idx
+            elif pressed == "Up":
+                if mode[curr_mode][2] == "y":
+                    myColor.incIntensity()
                     mode[curr_mode][0].color = myColor.color
-            else:
-                new_idx = w_index + 1
-                if new_idx > (len(wth_list) - 1):
-                    new_idx = 0
-                mode[curr_mode][0] = wth_list[new_idx]
-                w_index = new_idx
-        elif pressed == "Left":
-            if curr_mode != 9:
-                if mode[curr_mode][1] == "y":
-                    myColor.prevColor()
+            elif pressed == "Down":
+                if mode[curr_mode][2] == "y":
+                    myColor.decIntensity()
                     mode[curr_mode][0].color = myColor.color
-            else:
-                new_idx = w_index - 1
-                if new_idx < 0:
-                    new_idx = len(wth_list) - 1
-                mode[curr_mode][0] = wth_list[new_idx]
-                w_index = new_idx
-        elif pressed == "Up":
-            if mode[curr_mode][2] == "y":
-                myColor.incIntensity()
-                mode[curr_mode][0].color = myColor.color
-        elif pressed == "Down":
-            if mode[curr_mode][2] == "y":
-                myColor.decIntensity()
-                mode[curr_mode][0].color = myColor.color
-        elif pressed == "Play":
-            if is_enabled:
-                reset_strip.animate()
-                is_enabled = False
-            else:
-                is_enabled = True
+            elif pressed == "Play":
+                if is_enabled:
+                    reset_strip.animate()
+                    is_enabled = False
+                else:
+                    is_enabled = True
 
-finally:
-    pixels.fill(0)
-    pixels.show()
-    myRemote.close()
-    board.pin.GPIO.cleanup()
-    print("Exiting Cloud App.")
+    finally:
+        pixels.fill(0)
+        pixels.show()
+        myRemote.close()
+        board.pin.GPIO.cleanup()
+        print("Exiting Cloud App.")
+
+# Helper functions
+def sigterm_handler(_signo, _stack_frame):
+    sys.exit(0)
+
+signal.signal(signal.SIGTERM, sigterm_handler)
+
+if __name__ == __main__:
+    main()
