@@ -51,7 +51,7 @@ class Weather(object):
         Returns the zipcode for the Weather object as a string
         """
 
-        return str(self._zipcode)
+        return self._zipcode
 
     @zipcode.setter
     def zipcode(self, value):
@@ -85,7 +85,7 @@ class Weather(object):
         Returns the country for the Weather object as a string
         """
 
-        return str(self._country)
+        return self._country
 
     @country.setter
     def country(self, value):
@@ -105,7 +105,7 @@ class Weather(object):
         Returns the appid for the Weather object as a string
         """
 
-        return str(self._appid)
+        return self._appid
 
     @appid.setter
     def appid(self, value):
@@ -115,7 +115,7 @@ class Weather(object):
         """
 
         self.log.debug(f"Setting appid: {value}")
-        if value == None:
+        if value is None:
             self.log.warning("No API Key provided")
         self._appid = value
 
@@ -126,7 +126,7 @@ class Weather(object):
         Returns the current condition for the Weather object as a string
         """
 
-        return str(self._current)
+        return self._current
 
     @current.setter
     def current(self, value):
@@ -156,12 +156,12 @@ class Weather(object):
 
         self.log.debug("Calling Weather.update() - before time check")
         now = time.monotonic()
-        if (now < self._next_update or self.appid == "None") and not force:
+        if (now < self._next_update or self.appid is None) and not force:
             return False
 
         self.log.info("Calling Weather.update() - enough time has passed")
 
-        if self.appid == "None":
+        if self.appid is None:
             self.log.warning("API Key not set - defaulting to clear condition")
             self.current = "Clear"
             self.id = "800"
