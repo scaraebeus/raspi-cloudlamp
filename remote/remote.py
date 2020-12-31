@@ -3,7 +3,7 @@ Remote handler for APCloudLight 2020
 """
 
 # Imports
-from evdev import InputDevice
+from evdev import InputDevice, categorize, ecodes
 import adafruit_logging as logging
 
 # Create and setup logger
@@ -59,12 +59,21 @@ class IRRemote(object):
     def received(self):
         """ Checks to see if a remote button press was recieved and returns True if so """
         self.log.debug("Calling received()")
-        try:
-            self._event = next(self._device.read())
-            self.pressed = self.mapping[hex(self._event.value)]
-        except (BlockingIOError, KeyError):
-            return False
-        return True
+        evt = self._device.read_one()
+        while evt != None:
+            if evt.type != ecodes.EV_KEY:
+                evt = self._device.read_one()
+                continue
+            event = str(categorize(evt))
+            if "up" in event[-2:]:
+                self.pressed = self.mapping[
+                    event.split()[5].strip(",").strip("(").strip(")")
+                ]
+                return True
+
+            evt = self._device.read_one()
+
+        return False
 
     def close(self):
         self._device.close()

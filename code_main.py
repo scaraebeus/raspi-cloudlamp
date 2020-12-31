@@ -45,7 +45,7 @@ import board
 import neopixel
 
 # Application library imports
-import remote.remote_v0_2 as remote
+import remote.remote as remote
 import weather.weather as weather
 import adafruit_logging as logging
 from remote.adafruit_remote_mapping import mapping2 as mapping
