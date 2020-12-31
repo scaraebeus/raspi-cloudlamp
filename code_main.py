@@ -17,7 +17,7 @@ import signal
 from time import monotonic, sleep
 
 # Third party library imports
-#from adafruit_led_animation.animation.blink import Blink
+# from adafruit_led_animation.animation.blink import Blink
 from adafruit_led_animation.animation.sparklepulse import SparklePulse
 from adafruit_led_animation.animation.comet import Comet
 from adafruit_led_animation.animation.pulse import Pulse
