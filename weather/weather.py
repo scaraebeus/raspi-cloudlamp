@@ -156,15 +156,16 @@ class Weather(object):
 
         self.log.debug("Calling Weather.update() - before time check")
         now = time.monotonic()
-        if now < self._next_update and not force:
+        if (now < self._next_update or self.appid == "None") and not force:
             return False
 
         self.log.info("Calling Weather.update() - enough time has passed")
 
-        if self.appid == None:
+        if self.appid == "None":
             self.log.warning("API Key not set - defaulting to clear condition")
             self.current = "Clear"
             self.id = "800"
+            self._next_update = now + self.interval
             return False
 
         url = (
