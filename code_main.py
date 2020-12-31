@@ -62,17 +62,17 @@ logger.info("Initiating Weather . . .")
 myWeather = weather.Weather()
 
 # Setup IR remote
-logging.info("Initiating IRRemote . . .")
+logger.info("Initiating IRRemote . . .")
 myRemote = remote.IRRemote(mapping)
 
 # Setup neopixels
-logging.info("Initiating NeoPixels . . .")
+logger.info("Initiating NeoPixels . . .")
 pixel_pin = board.D18
 pixel_num = 48
 pixels = neopixel.NeoPixel(pixel_pin, pixel_num, brightness=0.5, auto_write=False)
 
 # Setup ColorHandler
-logging.info("Initiating ColorHandler . . .")
+logger.info("Initiating ColorHandler . . .")
 myColor = colorhandler.ColorHandler()
 
 # Setup Pixel Groups
