@@ -1,25 +1,18 @@
+# Standard library imports
+from random import randint
 import sys
 import signal
-
-sys.path.append(r"/home/pi/cloud/lib")
-
 from time import monotonic, sleep
-from random import randint
-import board
-import neopixel
-import remote_v0_2 as remote
-import weather
-import adafruit_logging as logging
 
-# from adafruit_remote_mapping import mapping
-from adafruit_remote_mapping import mapping2 as mapping
-from mysecrets import secrets
-import colorhandler
-
-from adafruit_led_animation.helper import PixelSubset, PixelMap
-from cloud_animations.lightningflash import LightningFlash
-from adafruit_led_animation.group import AnimationGroup
-from adafruit_led_animation.sequence import AnimationSequence, AnimateOnce
+# Third party library imports
+from adafruit_led_animation.animation.blink import Blink
+from adafruit_led_animation.animation.sparklepulse import SparklePulse
+from adafruit_led_animation.animation.comet import Comet
+from adafruit_led_animation.animation.pulse import Pulse
+from adafruit_led_animation.animation.sparkle import Sparkle
+from adafruit_led_animation.animation.rainbowsparkle import RainbowSparkle
+from adafruit_led_animation.animation.solid import Solid
+from adafruit_led_animation.animation.rainbow import Rainbow
 from adafruit_led_animation.color import (
     RED,
     YELLOW,
@@ -33,32 +26,27 @@ from adafruit_led_animation.color import (
     BLACK,
     calculate_intensity,
 )
+from adafruit_led_animation.group import AnimationGroup
+from adafruit_led_animation.helper import PixelSubset, PixelMap
+from adafruit_led_animation.sequence import AnimationSequence, AnimateOnce
+import board
+import neopixel
+
+sys.path.append(r"/home/pi/cloud/lib")
+
+# Application library imports
+import remote_v0_2 as remote
+import weather
+import adafruit_logging as logging
+
+# from adafruit_remote_mapping import mapping
+from adafruit_remote_mapping import mapping2 as mapping
+from mysecrets import secrets
+import colorhandler
+
+from cloud_animations.lightningflash import LightningFlash
 
 
-from adafruit_led_animation.animation.blink import Blink
-from adafruit_led_animation.animation.sparklepulse import SparklePulse
-from adafruit_led_animation.animation.comet import Comet
-from adafruit_led_animation.animation.chase import Chase
-from adafruit_led_animation.animation.pulse import Pulse
-from adafruit_led_animation.animation.sparkle import Sparkle
-from adafruit_led_animation.animation.rainbowchase import RainbowChase
-from adafruit_led_animation.animation.rainbowsparkle import RainbowSparkle
-from adafruit_led_animation.animation.rainbowcomet import RainbowComet
-from adafruit_led_animation.animation.solid import Solid
-from adafruit_led_animation.animation.colorcycle import ColorCycle
-from adafruit_led_animation.animation.rainbow import Rainbow
-from adafruit_led_animation.animation.customcolorchase import CustomColorChase
-from adafruit_led_animation.sequence import AnimationSequence
-from adafruit_led_animation.color import (
-    RED,
-    PURPLE,
-    WHITE,
-    AMBER,
-    JADE,
-    MAGENTA,
-    ORANGE,
-    BLACK,
-)
 
 # Create and setup logger
 logger = logging.getLogger("cloud")
