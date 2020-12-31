@@ -1,0 +1,15 @@
+[Unit]
+Description=Turn off Pi LED
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c "echo none | tee /sys/class/leds/led0/trigger && \
+                        echo 0 | tee /sys/class/leds/led0/brightness"
+RemainAfterExit=True
+ExecStop=/bin/bash -c "echo actpwr | tee /sys/class/leds/led0/trigger && \
+                       echo 1 | tee /sys/class/leds/led0/brightness"
+
+[Install]
+WantedBy=multi-user.target
+
