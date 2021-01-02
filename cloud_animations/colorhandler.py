@@ -68,10 +68,10 @@ class ColorHandler(object):
             self._intensity += step
 
     def dec_intensity(self, step=0.1):
-        if self._intensity == 0.0:
+        if self._intensity == 0.1:
             return
-        if (self._intensity - step) < 0.0:
-            self._intensity = 0.0
+        if (self._intensity - step) < 0.1:
+            self._intensity = 0.1
         else:
             self._intensity -= step
 

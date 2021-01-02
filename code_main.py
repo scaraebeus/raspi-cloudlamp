@@ -288,12 +288,12 @@ mode = [
     [rain, "n", "n"],  # 0: Place holder for weather mode (default)
     [solid, "y", "y"],  # 1: Solid color mode - Can change color (and ideally intensity)
     [rainbow, "n", "n"],  # 2: Rainbow mode
-    [pulse, "y", "n"],  # 3: Pulse/Breath mode - Can change color
-    [sparkle, "y", "n"],  # 4: Sparkle mode - Can change color
+    [pulse, "y", "y"],  # 3: Pulse/Breath mode - Can change color
+    [sparkle, "y", "y"],  # 4: Sparkle mode - Can change color
     # [p_sparkle, 'y', 'n'], # N: Pulse Sparkle mode - Can change color
     [r_sparkle, "n", "n"],  # 5: Rainbow Sparkle mode
-    [c_scan, "y", "n"],  # 6: Line Scan mode - Can change color
-    [h_scan, "y", "n"],  # 7: Grid Scan mode - Can change color
+    [c_scan, "y", "y"],  # 6: Line Scan mode - Can change color
+    [h_scan, "y", "y"],  # 7: Grid Scan mode - Can change color
     [lightning_list[0], "y", "n"],  # 8: Lightning mode - Can change color
     [wth_list[0], "n", "n"],  # 9: Weather demo mode - can cycle between patterns
 ]
