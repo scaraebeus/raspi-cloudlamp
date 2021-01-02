@@ -366,7 +366,7 @@ def main():
             elif pressed == "Right":
                 if curr_mode != 9:
                     if mode[curr_mode][1] == "y":
-                        myColor.nextColor()
+                        myColor.next_color()
                         mode[curr_mode][0].color = myColor.color
                 else:
                     new_idx = w_index + 1
@@ -377,7 +377,7 @@ def main():
             elif pressed == "Left":
                 if curr_mode != 9:
                     if mode[curr_mode][1] == "y":
-                        myColor.prevColor()
+                        myColor.prev_color()
                         mode[curr_mode][0].color = myColor.color
                 else:
                     new_idx = w_index - 1
@@ -387,11 +387,11 @@ def main():
                     w_index = new_idx
             elif pressed == "Up":
                 if mode[curr_mode][2] == "y":
-                    myColor.incIntensity()
+                    myColor.inc_intensity()
                     mode[curr_mode][0].color = myColor.color
             elif pressed == "Down":
                 if mode[curr_mode][2] == "y":
-                    myColor.decIntensity()
+                    myColor.dec_intensity()
                     mode[curr_mode][0].color = myColor.color
             elif pressed == "Play":
                 if is_enabled:

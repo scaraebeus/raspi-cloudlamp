@@ -2,101 +2,85 @@
 Color handler for APCloudLight 2020
 """
 
-from adafruit_led_animation.color import (
-    RED,
-    YELLOW,
-    ORANGE,
-    GREEN,
-    TEAL,
-    CYAN,
-    BLUE,
-    PURPLE,
-    MAGENTA,
-    JADE,
-    PINK,
-    AQUA,
-    AMBER,
-    WHITE,
-    OLD_LACE,
-)
+from adafruit_led_animation.color import color
 
-aColors = [
-    RED,
-    YELLOW,
-    ORANGE,
-    GREEN,
-    TEAL,
-    CYAN,
-    BLUE,
-    PURPLE,
-    MAGENTA,
-    JADE,
-    PINK,
-    AQUA,
-    AMBER,
-    WHITE,
-    OLD_LACE,
+avail_colors = [
+    color.RED,
+    color.YELLOW,
+    color.ORANGE,
+    color.GREEN,
+    color.TEAL,
+    color.CYAN,
+    color.BLUE,
+    color.PURPLE,
+    color.MAGENTA,
+    color.JADE,
+    color.PINK,
+    color.AQUA,
+    color.AMBER,
+    color.WHITE,
+    color.OLD_LACE,
 ]
 
 
 class ColorHandler(object):
     """ Class for the ColorHandler object """
 
-    def __init__(self, colors=aColors):
+    def __init__(self, colors=avail_colors):
 
         self._intensity = 1.0
         self._colors = colors
-        self._currentColor = 0
-        self._totalColors = len(self._colors) - 1
-        self.color = self._currentColor
+        self._current_color = 0
+        self._total_colors = len(self._colors) - 1
+        self.color = self._current_color
 
     @property
     def color(self):
-        return self._setintensity(self._color)
+        return self._set_intensity(self._color)
 
     @color.setter
     def color(self, value):
         self._color = self._colors[value]
 
     # Functions
-    def nextColor(self):
-        if self._currentColor == self._totalColors:
-            self._currentColor = 0
+    def next_color(self):
+        if self._current_color == self._total_colors:
+            self._current_color = 0
         else:
-            self._currentColor += 1
+            self._current_color += 1
 
-        self.color = self._currentColor
+        self.color = self._current_color
 
-    def prevColor(self):
-        if self._currentColor == 0:
-            self._currentColor = self._totalColors
+    def prev_color(self):
+        if self._current_color == 0:
+            self._current_color = self._total_colors
         else:
-            self._currentColor -= 1
+            self._current_color -= 1
 
-        self.color = self._currentColor
+        self.color = self._current_color
 
-    def incIntensity(self):
+    def inc_intensity(self, step=0.1):
         if self._intensity == 1.0:
             return
-        if (self._intensity + 0.2) > 1.0:
+        if (self._intensity + step) > 1.0:
             self._intensity = 1.0
         else:
-            self._intensity += 0.2
+            self._intensity += step
 
-    def decIntensity(self):
-        if self._intensity == 0.2:
+    def dec_intensity(self, step=0.1):
+        if self._intensity == 0.0:
             return
-        if (self._intensity - 0.2) < 0.2:
-            self._intensity = 0.2
+        if (self._intensity - step) < 0.0:
+            self._intensity = 0.0
         else:
-            self._intensity -= 0.2
+            self._intensity -= step
 
     def intensity(self, value):
-        if value < 0.2 or value > 1.0:
+        if value < 0.0 or value > 1.0:
             return
         self._intensity = value
 
-    def _setintensity(self, color):
+    def _set_intensity(self, color):
         return (
             int(color[0] * self._intensity),
             int(color[1] * self._intensity),
