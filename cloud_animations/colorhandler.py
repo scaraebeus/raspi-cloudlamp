@@ -2,7 +2,7 @@
 Color handler for APCloudLight 2020
 """
 
-from adafruit_led_animation.color import color
+from adafruit_led_animation import color
 
 avail_colors = [
     color.RED,
