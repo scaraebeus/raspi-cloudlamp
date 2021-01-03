@@ -234,7 +234,7 @@ snow = AnimationGroup(
 
 solid = Solid(pixels, color=RED)
 rainbow = Rainbow(pixels, speed=0.1, period=2)
-pulse = Pulse(pixels, speed=0.1, period=3, color=RED)
+pulse = Pulse(pixels, speed=0.1, period=6, color=RED)
 sparkle = Sparkle(pixels, speed=0.1, color=RED, num_sparkles=10)
 r_sparkle = RainbowSparkle(pixels, speed=0.1, num_sparkles=15)
 c_scan = Comet(
