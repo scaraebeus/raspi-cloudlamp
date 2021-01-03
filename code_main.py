@@ -11,6 +11,7 @@ TODO:
 """
 
 # Standard library imports
+import logging
 from random import randint
 import sys
 import signal
@@ -44,15 +45,20 @@ import neopixel
 # Application library imports
 import remote.remote as remote
 import weather.weather as weather
-import adafruit_logging as logging
+# import adafruit_logging as logging
 from remote.adafruit_remote_mapping import mapping
 from secrets import secrets
 import cloud_animations.colorhandler as colorhandler
 from cloud_animations.lightningflash import LightningFlash
 
 # Create and setup logger
-logger = logging.getLogger("cloud")
-logger.setLevel(logging.INFO)
+logger = logging.getLogger("raspi-cloudlamp")
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+console_format = logging.Formatter("%(name)s - %(levelname)s - %(message)s")
+console_handler.setFormatter(console_format)
+logger.addHandler(console_handler)
+# logger.setLevel(logging.INFO)
 
 # Setup Weather class
 logger.info("Initiating Weather . . .")
@@ -314,7 +320,7 @@ def main():
     next_update = monotonic()
     w_index = 0
 
-    logger.info("Starting main loop")
+    logger.info("Main loop started.")
     try:
         while True:
             while not myRemote.received():
@@ -416,4 +422,5 @@ def sigterm_handler(_signo, _stack_frame):
 signal.signal(signal.SIGTERM, sigterm_handler)
 
 if __name__ == "__main__":
+    logger.info("Starting main loop . . .")
     main()
