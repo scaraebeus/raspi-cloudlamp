@@ -24,7 +24,14 @@ import weather.weather as weather
 from remote.adafruit_remote_mapping import mapping
 from secrets import secrets
 import cloud_animations.colorhandler as colorhandler
-from cloud_animations import pixels, wth_list, mode, lightning_list, reset_strip, weather_anim
+from cloud_animations import (
+    pixels,
+    wth_list,
+    mode,
+    lightning_list,
+    reset_strip,
+    weather_anim,
+)
 
 # Create and setup logger
 logger = logging.getLogger("raspi-cloudlamp")

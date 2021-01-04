@@ -101,9 +101,9 @@ class Drops(Animation):
             _generator = pulse_generator(period, self.color)
             self._drops.append(
                 {
-                    "pixel" : d,
-                    "color" : self._background,
-                    "generator" : _generator,
+                    "pixel": d,
+                    "color": self._background,
+                    "generator": _generator,
                 }
             )
 
