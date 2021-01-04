@@ -1,5 +1,6 @@
 import board
 import neopixel
+import logging
 
 from adafruit_led_animation.group import AnimationGroup
 from adafruit_led_animation.helper import PixelSubset, PixelMap
@@ -21,10 +22,13 @@ from adafruit_led_animation.animation.rainbowsparkle import RainbowSparkle
 from adafruit_led_animation.animation.solid import Solid
 from adafruit_led_animation.animation.rainbow import Rainbow
 
-from cloud_animations.lightningflash import LightningFlash
-from cloud_animations.drops import Drops
+from .lightningflash import LightningFlash
+from .drops import Drops
+
+logger = logging.getLogger("raspi-cloudlamp.cloud_animations")
 
 # Setup NeoPixels
+logger.info("Initializing NeoPixels . . .")
 pixel_pin = board.D18
 pixel_num = 48
 pixels = neopixel.NeoPixel(pixel_pin, pixel_num, brightness=0.5, auto_write=False)
@@ -63,22 +67,34 @@ cloudy25 = PixelMap(pixels, [(32, 48), (0, 8)])
 top_half = PixelSubset(pixels, 0, 32)
 rain_pixels = PixelSubset(pixels, 32, 48)
 
-# Lightning Animations
-# TODO: Move all of the lightning animation stuff to its own module
+# Lightning Path Groups
 lightning_path_1 = PixelMap(
     pixels, [26, 28, 30, 19, 11, 2, 46, 42, 38], individual_pixels=True
 )
 
 lightning_path_2 = PixelMap(
-    pixels, [41, 45, 4, 13, 20, 25, 27, 33], individual_pixels=True
+    pixels, [41, 45, 4, 13, 20, 25, 27, 33, 39], individual_pixels=True
 )
 
 lightning_path_3 = PixelMap(
-    pixels, [39, 31, 29, 18, 11, 7, 45, 41], individual_pixels=True
+    pixels, [39, 31, 29, 18, 11, 7, 45, 41, 32], individual_pixels=True
 )
 
+lightning_path_4 = PixelMap(
+    pixels, [6, 10, 20, 29, 17, 39, 38, 42, 47], individual_pixels=True
+)
+
+lightning_path_5 = PixelMap(
+    pixels, [44, 38, 31, 17, 13, 3, 9, 38, 34], individual_pixels=True
+)
+
+lightning_path_6 = PixelMap(
+    pixels, [7, 10, 11, 12, 18, 30, 32, 37, 41], individual_pixels=True
+)
+
+# Lightning Animations
 lightningflash = LightningFlash(
-    pixels, lower_speed=0.05, upper_speed=0.1, num_pixels=12, color=WHITE
+    pixels, lower_speed=0.05, upper_speed=0.2, num_pixels=12, color=WHITE
 )
 
 lightningstreak1 = Comet(
@@ -91,6 +107,18 @@ lightningstreak2 = Comet(
 
 lightningstreak3 = Comet(
     lightning_path_3, speed=0.03, color=WHITE, tail_length=3, bounce=False
+)
+
+lightningstreak4 = Comet(
+    lightning_path_4, speed=0.03, color=WHITE, tail_length=3, bounce=False
+)
+
+lightningstreak5 = Comet(
+    lightning_path_5, speed=0.03, color=WHITE, tail_length=3, bounce=False
+)
+
+lightningstreak6 = Comet(
+    lightning_path_6, speed=0.03, color=WHITE, tail_length=3, bounce=False
 )
 
 lightningseq1 = AnimationSequence(
@@ -128,7 +156,7 @@ lightningseq4 = AnimationSequence(
 )
 
 lightningseq5 = AnimationSequence(
-    lightningstreak3,
+    lightningstreak4,
     lightningflash,
     lightningflash,
     auto_clear=True,
