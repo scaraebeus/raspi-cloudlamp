@@ -55,7 +55,7 @@ from cloud_animations.lightningflash import LightningFlash
 logger = logging.getLogger("raspi-cloudlamp")
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.INFO)
-console_format = logging.Formatter("%(name)s - %(levelname)s - %(message)s")
+console_format = logging.Formatter("%(levelname)s: %(module)s -  %(message)s")
 console_handler.setFormatter(console_format)
 logger.addHandler(console_handler)
 # logger.setLevel(logging.INFO)
@@ -328,9 +328,8 @@ def main():
                     sleep(1)
                     continue
                 if curr_mode == 0:
-                    logger.debug("Current mode is weather")
                     if myWeather.update():
-                        logger.info(
+                        logger.debug(
                             f"Changing animation due to new weather: {myWeather.current}"
                         )
                         if myWeather.current != "Clouds":
@@ -339,6 +338,7 @@ def main():
                             mode[0][0] = weather_anim[str(myWeather.id)]
 
                 if curr_mode != last_mode:
+                    logger.debug(f"Mode changed. prev: {last_mode} new: {curr_mode}")
                     reset_strip.animate()
                     mode[last_mode][0].reset()
                     last_mode = curr_mode
@@ -359,7 +359,7 @@ def main():
 
                 mode[curr_mode][0].animate()
 
-            logger.info(f"myRemote.received() returned True.  Key: {myRemote.pressed}")
+            logger.debug(f"myRemote.received() returned True.  Key: {myRemote.pressed}")
             pressed = myRemote.pressed
             if pressed == "Mode":
                 last_mode = curr_mode
@@ -411,11 +411,12 @@ def main():
         pixels.show()
         myRemote.close()
         board.pin.GPIO.cleanup()
-        print("Exiting Cloud App.")
+        logger.info("Exiting raspi-cloudlamp.")
 
 
 # Helper functions
 def sigterm_handler(_signo, _stack_frame):
+    logger.info("SIGTERM received.")
     sys.exit(0)
 
 

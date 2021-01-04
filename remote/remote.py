@@ -4,10 +4,10 @@ Remote handler for APCloudLight 2020
 
 # Imports
 from evdev import InputDevice, categorize, ecodes
-import adafruit_logging as logging
+# import adafruit_logging as logging
 
 # Create and setup logger
-remlog = logging.getLogger("cloud.remote")
+remlog = logging.getLogger("raspi-cloudlamp.remote")
 
 
 class IRRemote(object):
@@ -38,13 +38,13 @@ class IRRemote(object):
                         the pulses. Default is NEC
         """
 
-        self.log = logging.getLogger("cloud.remote.IRRemote")
+        self.log = logging.getLogger("raspi-cloudlamp.remote.IRRemote")
         self.log.setLevel(logging.INFO)
-        self.log.info("Creating instance of IRRemote Class.")
         self._event = None
         self.pressed = None
         self.mapping = mapping
         self._device = InputDevice(input_device)
+        self.log.info("Created instance of IRRemote Class.")
 
     @property
     def pressed(self):
@@ -58,13 +58,13 @@ class IRRemote(object):
     # Class functions
     def received(self):
         """ Checks to see if a remote button press was recieved and returns True if so """
-        self.log.debug("Calling received()")
         evt = self._device.read_one()
         while evt != None:
             if evt.type != ecodes.EV_KEY:
                 evt = self._device.read_one()
                 continue
             event = str(categorize(evt))
+            self.log.debug(f"Recieved valid event: {event}")
             if "up" in event[-2:]:
                 self.pressed = self.mapping[
                     event.split()[5].strip(",").strip("(").strip(")")
@@ -77,3 +77,4 @@ class IRRemote(object):
 
     def close(self):
         self._device.close()
+        self.log.info("Closed connection to IR device.")

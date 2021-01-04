@@ -5,10 +5,10 @@ Module ver: v0.1
 
 # Imports
 import time
-import adafruit_logging as logging
+# import adafruit_logging as logging
 import requests
 
-wthlog = logging.getLogger("cloud.weather")
+wthlog = logging.getLogger("raspi-cloudlamp.weather")
 
 
 class Weather(object):
@@ -30,9 +30,8 @@ class Weather(object):
         Initializes a weather class object - uses zipcode and country to determine location to get weather for.
         """
 
-        self.log = logging.getLogger("cloud.weather.Weather")
+        self.log = logging.getLogger("raspi-cloudlamp.weather.Weather")
         self.log.setLevel(logging.INFO)
-        self.log.info("Creating instance of Weather Class.")
         self.is_active = False
         self.wifi = wifi  # adafruit wifimanager object
         self.zipcode = zipcode
@@ -43,6 +42,7 @@ class Weather(object):
         self.interval = interval
         self._next_update = time.monotonic()
         self.update(True)
+        self.log.info("Instance of Weather class created.")
 
     @property
     def zipcode(self):
@@ -60,7 +60,7 @@ class Weather(object):
         Sets the self._zipcode variable of the Weather object to the provided value
         """
 
-        self.log.debug("Setting zip code")
+        self.log.info("Setting zip code . . .")
         if len(value) != 5:
             self.log.warning(
                 f"Zip code must be 5 characters.  Value provided was {str(value)}"
@@ -76,7 +76,7 @@ class Weather(object):
 
         self._zipcode = value
         self.is_active = True
-        self.log.debug(f"Zip code set: {self._zipcode}")
+        self.log.info(f"Zip code set: {self._zipcode}")
 
     @property
     def country(self):
@@ -95,7 +95,7 @@ class Weather(object):
         """
 
         # Need some value checking code here
-        self.log.debug(f"Setting country: {value}")
+        self.log.info(f"Setting country: {value}")
         self._country = value
 
     @property
@@ -114,7 +114,7 @@ class Weather(object):
         Sets the self._appid variable of the Weather object to the provided value
         """
 
-        self.log.debug(f"Setting appid: {value}")
+        self.log.info(f"Setting appid: {value}")
         if value is None:
             self.log.warning("No API Key provided")
         self._appid = value
@@ -159,7 +159,7 @@ class Weather(object):
         if (now < self._next_update or self.appid is None) and not force:
             return False
 
-        self.log.info("Calling Weather.update() - enough time has passed")
+        self.log.debug("Calling Weather.update() - enough time has passed")
 
         if self.appid is None:
             self.log.warning("API Key not set - defaulting to clear condition")
@@ -197,17 +197,17 @@ class Weather(object):
 
         new_condition = resp["weather"][0]["main"]
         new_id = resp["weather"][0]["id"]
-        self.log.info(f"Retrieved weather condition update: {new_condition}")
+        self.log.debug(f"Retrieved weather condition update: {new_condition}")
         if self.id == new_id:
             # No Change, we'll try again in another self.interval
-            self.log.info(
+            self.log.debug(
                 f"Condition unchanged. Current: {self.id},{self.current} New: {new_id},{new_condition}"
             )
             self._next_update = now + self.interval
             return False
         else:
             # Condition changed, let's update it and return True
-            self.log.info(
+            self.log.debug(
                 f"Condition changed: Current: {self.id},{self.current} New: {new_id},{new_condition}"
             )
             self.current = new_condition
