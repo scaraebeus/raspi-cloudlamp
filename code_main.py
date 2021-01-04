@@ -49,6 +49,7 @@ from remote.adafruit_remote_mapping import mapping
 from secrets import secrets
 import cloud_animations.colorhandler as colorhandler
 from cloud_animations.lightningflash import LightningFlash
+from cloud_animations.drops import Drops
 
 # Create and setup logger
 logger = logging.getLogger("raspi-cloudlamp")
@@ -231,6 +232,10 @@ rain = AnimationGroup(
     SparklePulse(rain_pixels, speed=0.1, period=2, color=BLUE),
     sync=False,
 )
+rain2 = Drops(rain_pixels, speed=0.15, color=BLUE, count=2, background=DULL_WHITE)
+rain3 = Drops(rain_pixels, speed=0.15, color=BLUE, count=6, background=DULL_WHITE)
+rain4 = Drops(rain_pixels, speed=0.15, color=BLUE, count=12, background=DULL_WHITE)
+rain5 = Drops(rain_pixels, speed=0.15, color=BLUE, count=12, background=DULL_WHITE)
 snow = AnimationGroup(
     Solid(top_half, color=DULL_WHITE),
     SparklePulse(rain_pixels, speed=0.1, period=2, color=WHITE),
@@ -272,7 +277,7 @@ wth_demo = AnimationSequence(
     advance_interval=5,
 )
 
-wth_list = [clearday, cloud25, cloud50, cloud75, cloud100, rain, snow]
+wth_list = [clearday, cloud25, cloud50, cloud75, cloud100, rain, rain2, rain3, rain4, snow]
 
 # Setup modes and weather_anim
 weather_anim = {
