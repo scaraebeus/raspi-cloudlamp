@@ -5,7 +5,6 @@ Remote handler for APCloudLight 2020
 # Imports
 from evdev import InputDevice, categorize, ecodes
 import logging
-# import adafruit_logging as logging
 
 # Create and setup logger
 remlog = logging.getLogger("raspi-cloudlamp.remote")
@@ -60,7 +59,7 @@ class IRRemote(object):
     def received(self):
         """ Checks to see if a remote button press was recieved and returns True if so """
         evt = self._device.read_one()
-        while evt != None:
+        while evt is not None:
             if evt.type != ecodes.EV_KEY:
                 evt = self._device.read_one()
                 continue

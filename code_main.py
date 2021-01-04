@@ -45,7 +45,6 @@ import neopixel
 # Application library imports
 import remote.remote as remote
 import weather.weather as weather
-# import adafruit_logging as logging
 from remote.adafruit_remote_mapping import mapping
 from secrets import secrets
 import cloud_animations.colorhandler as colorhandler
@@ -59,7 +58,6 @@ console_handler.setLevel(logging.INFO)
 console_format = logging.Formatter("%(levelname)s: %(name)s -  %(message)s")
 console_handler.setFormatter(console_format)
 logger.addHandler(console_handler)
-# logger.setLevel(logging.INFO)
 
 # Setup Weather class
 logger.info("Initiating Weather . . .")
