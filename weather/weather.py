@@ -5,6 +5,7 @@ Module ver: v0.1
 
 # Imports
 import time
+import logging
 # import adafruit_logging as logging
 import requests
 

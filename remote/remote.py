@@ -4,6 +4,7 @@ Remote handler for APCloudLight 2020
 
 # Imports
 from evdev import InputDevice, categorize, ecodes
+import logging
 # import adafruit_logging as logging
 
 # Create and setup logger
