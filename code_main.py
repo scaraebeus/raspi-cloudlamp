@@ -45,7 +45,6 @@ import neopixel
 # Application library imports
 import remote.remote as remote
 import weather.weather as weather
-from weather import weather_animations as weather_anim
 from remote.adafruit_remote_mapping import mapping
 from secrets import secrets
 import cloud_animations.colorhandler as colorhandler

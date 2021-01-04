@@ -231,7 +231,7 @@ mode = [
     [c_scan, "y", "y"],  # 6: Line Scan mode - Can change color
     [h_scan, "y", "y"],  # 7: Grid Scan mode - Can change color
     [lightning_list[0], "y", "n"],  # 8: Lightning mode - Can change color
-    [animation_wth_list[0], "n", "n"],  # 9: Weather demo mode - can cycle between patterns
+    [wth_list[0], "n", "n"],  # 9: Weather demo mode - can cycle between patterns
 ]
 
 # Map openweathermap condition codes to weather animations
