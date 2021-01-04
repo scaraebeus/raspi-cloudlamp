@@ -53,9 +53,10 @@ from cloud_animations.lightningflash import LightningFlash
 
 # Create and setup logger
 logger = logging.getLogger("raspi-cloudlamp")
+logger.setLevel(logging.INFO)
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.INFO)
-console_format = logging.Formatter("%(levelname)s: %(module)s -  %(message)s")
+console_format = logging.Formatter("%(levelname)s: %(name)s -  %(message)s")
 console_handler.setFormatter(console_format)
 logger.addHandler(console_handler)
 # logger.setLevel(logging.INFO)
