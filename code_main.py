@@ -232,15 +232,32 @@ rain = AnimationGroup(
     SparklePulse(rain_pixels, speed=0.1, period=2, color=BLUE),
     sync=False,
 )
-rain2 = Drops(rain_pixels, speed=0.15, color=BLUE, count=2, background=DULL_WHITE)
-rain3 = Drops(rain_pixels, speed=0.15, color=BLUE, count=6, background=DULL_WHITE)
-rain4 = Drops(rain_pixels, speed=0.15, color=BLUE, count=12, background=DULL_WHITE)
-rain5 = Drops(rain_pixels, speed=0.15, color=BLUE, count=12, background=DULL_WHITE)
+rainlight = AnimationGroup(
+    Solid(top_half, color=DULL_WHITE),
+    Drops(rain_pixels, speed=0.1, color=BLUE, count=4, background=DULL_WHITE),
+    sync=False,
+)
+rainheavy = AnimationGroup(
+    Solid(top_half, color=DULL_WHITE),
+    Drops(rain_pixels, speed=0.1, color=BLUE, count=16, background=DULL_WHITE),
+    sync=False,
+)
 snow = AnimationGroup(
     Solid(top_half, color=DULL_WHITE),
     SparklePulse(rain_pixels, speed=0.1, period=2, color=WHITE),
     sync=False,
 )
+snowlight = AnimationGroup(
+    Solid(top_half, color=DULL_WHITE),
+    Drops(rain_pixels, speed=0.1, color=WHITE, count=4, background=DULL_WHITE),
+    sync=False,
+)
+snowheavy = AnimationGroup(
+    Solid(top_half, color=DULL_WHITE),
+    Drops(rain_pixels, speed=0.1, color=WHITE, count=4, background=DULL_WHITE),
+    sync=False,
+)
+
 
 solid = Solid(pixels, color=RED)
 rainbow = Rainbow(pixels, speed=0.1, period=2)
@@ -277,7 +294,7 @@ wth_demo = AnimationSequence(
     advance_interval=5,
 )
 
-wth_list = [clearday, cloud25, cloud50, cloud75, cloud100, rain, rain2, rain3, rain4, snow]
+wth_list = [clearday, cloud25, cloud50, cloud75, cloud100, rainlight, rainheavy, snowlight, snowheavy]
 
 # Setup modes and weather_anim
 weather_anim = {

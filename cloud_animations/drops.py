@@ -37,6 +37,7 @@ Implementation Notes
 
 import random
 from adafruit_led_animation.animation import Animation
+from adafruit_led_animation import MS_PER_SECOND, monotonic_ms
 from adafruit_led_animation.color import calculate_intensity
 
 __version__ = "0.0.0-auto.0"
@@ -52,9 +53,8 @@ class Drops(Animation):
     :param float speed: Animation speed in seconds, e.g. ``0.1``.
     :param color: Animation color in ``(r, g, b)`` tuple, or ``0x000000`` hex format.
     :param count: Number of drops to generate per animation cycle.
-    :param start_int: Starting intensity (Default 0.1)
-    :param max_int: Max intensity before drop (Default 1.0)
-    :param step: Steps in intensity (Default 0.1)
+    :param min_period: Minimum period for pulse (Default 1.0)
+    :param max_period: Max period for pulse (Default 6.0)
     :param background: Background color (Default BLACK).
     """
 
@@ -65,16 +65,14 @@ class Drops(Animation):
         speed,
         color,
         count=1,
-        start_int=0.1,
-        max_int=1.0,
-        step=0.1,
+        min_period=1.0,
+        max_period=6.0,
         background=BLACK,
         name=None,
     ):
         self._count = count
-        self._start_int = start_int
-        self._max_int = max_int
-        self._step = step
+        self._min_period = min_period
+        self._max_period = max_period
         self._background = background
         self._drops = []
         super().__init__(pixel_object, speed, color, name=name)
@@ -84,29 +82,55 @@ class Drops(Animation):
         # Increase drop intensity
         keep = []
         for drop in self._drops:
-            drop[1] += self._step
-            if drop[1] > drop[2]:
-                self.pixel_object[drop[0]] = self._background
-            else:
-                drop[3] = calculate_intensity(self.color, drop[1])
+            color = next(drop["generator"])
+            if color is not None:
+                drop["color"] = color
                 keep.append(drop)
+            else:
+                self.pixel_object[drop["pixel"]] = self._background
         self._drops = keep
 
         # Add a drop
         if len(self._drops) < self._count:
-            d = random.randint(0, len(self.pixel_object) - 1)
+            # create list of pixels not in self._drops
+            used = [drop["pixel"] for drop in self._drops]
+            avail = [n for n in range(len(self.pixel_object)) if n not in used]
+            # randomly pick one from that list
+            d = random.choice(avail)
+            period = random.randint(self._min_period, self._max_period)
+            _generator = pulse_generator(period, self.color)
             self._drops.append(
-                [
-                    d,
-                    self._start_int,
-                    self._generate_drop(self._max_int),
-                    calculate_intensity(self.color, self._start_int),
-                ]
+                {
+                    "pixel" : d,
+                    "color" : self._background,
+                    "generator" : _generator,
+                }
             )
 
         # Draw raindrops
-        for d, n, i, color in self._drops:
-            self.pixel_object[d] = color
+        for drop in self._drops:
+            self.pixel_object[drop["pixel"]] = drop["color"]
 
-    def _generate_drop(self, n):
-        return round(random.uniform(self._max_int / 2, self._max_int), 1)
+
+def pulse_generator(period: float, color):
+    """
+    Generates a sequence of colors for a pulse, based on the time period specified.
+    :param period: Pulse duration in seconds.
+    :param color: RGB Color
+    """
+    period = int(period * MS_PER_SECOND)
+    half_period = period // 2
+
+    last_update = monotonic_ms()
+    cycle_position = 0
+    while True:
+        now = monotonic_ms()
+        time_since_last_draw = now - last_update
+        last_update = now
+        pos = cycle_position = (cycle_position + time_since_last_draw) % period
+        if pos > half_period:
+            cycle_position = 0
+            yield None
+            continue
+        intensity = pos / half_period
+        yield calculate_intensity(color, intensity)
