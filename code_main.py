@@ -11,36 +11,12 @@ TODO:
 """
 
 # Standard library imports
+import board
 import logging
 from random import randint
 import sys
 import signal
 from time import monotonic, sleep
-
-# Third party library imports
-# from adafruit_led_animation.animation.blink import Blink
-from adafruit_led_animation.animation.sparklepulse import SparklePulse
-from adafruit_led_animation.animation.comet import Comet
-from adafruit_led_animation.animation.pulse import Pulse
-from adafruit_led_animation.animation.sparkle import Sparkle
-from adafruit_led_animation.animation.rainbowsparkle import RainbowSparkle
-from adafruit_led_animation.animation.solid import Solid
-from adafruit_led_animation.animation.rainbow import Rainbow
-from adafruit_led_animation.color import (
-    RED,
-    YELLOW,
-    PURPLE,
-    BLUE,
-    WHITE,
-    JADE,
-    BLACK,
-    calculate_intensity,
-)
-from adafruit_led_animation.group import AnimationGroup
-from adafruit_led_animation.helper import PixelSubset, PixelMap
-from adafruit_led_animation.sequence import AnimationSequence
-import board
-import neopixel
 
 # Application library imports
 import remote.remote as remote

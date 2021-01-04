@@ -184,7 +184,7 @@ rainlight = AnimationGroup(
 )
 rainheavy = AnimationGroup(
     Solid(top_half, color=DULL_WHITE),
-    Drops(rain_pixels, speed=0.1, color=BLUE, count=16, background=DULL_WHITE),
+    Drops(rain_pixels, speed=0.1, color=BLUE, count=12, background=DULL_WHITE),
     sync=False,
 )
 snowveryheavy = AnimationGroup(
@@ -199,7 +199,7 @@ snowlight = AnimationGroup(
 )
 snowheavy = AnimationGroup(
     Solid(top_half, color=DULL_WHITE),
-    Drops(rain_pixels, speed=0.1, color=WHITE, count=4, background=DULL_WHITE),
+    Drops(rain_pixels, speed=0.1, color=WHITE, count=12, background=DULL_WHITE),
     sync=False,
 )
 
