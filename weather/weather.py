@@ -207,7 +207,7 @@ class Weather(object):
             return False
         else:
             # Condition changed, let's update it and return True
-            self.log.debug(
+            self.log.info(
                 f"Condition changed: Current: {self.id},{self.current} New: {new_id},{new_condition}"
             )
             self.current = new_condition
