@@ -45,7 +45,6 @@ import neopixel
 # Application library imports
 import remote.remote as remote
 import weather.weather as weather
-from weather import weather_animations as weather_anim
 from remote.adafruit_remote_mapping import mapping
 from secrets import secrets
 import cloud_animations.colorhandler as colorhandler
@@ -228,7 +227,7 @@ cloud75 = AnimationGroup(
     Solid(sunny25, color=YELLOW), Solid(cloudy75, color=DULL_WHITE), sync=True
 )
 cloud100 = Solid(pixels, color=DULL_WHITE)
-rainveryheavy = AnimationGroup(
+rain = AnimationGroup(
     Solid(top_half, color=DULL_WHITE),
     SparklePulse(rain_pixels, speed=0.1, period=2, color=BLUE),
     sync=False,
@@ -243,7 +242,7 @@ rainheavy = AnimationGroup(
     Drops(rain_pixels, speed=0.1, color=BLUE, count=16, background=DULL_WHITE),
     sync=False,
 )
-snowveryheavy = AnimationGroup(
+snow = AnimationGroup(
     Solid(top_half, color=DULL_WHITE),
     SparklePulse(rain_pixels, speed=0.1, period=2, color=WHITE),
     sync=False,
@@ -295,11 +294,25 @@ wth_demo = AnimationSequence(
     advance_interval=5,
 )
 
-wth_list = [clearday, cloud25, cloud50, cloud75, cloud100, rainlight, rainheavy, rainveryheavy, snowlight, snowheavy, snowveryheavy]
+wth_list = [clearday, cloud25, cloud50, cloud75, cloud100, rainlight, rainheavy, snowlight, snowheavy]
+
+# Setup modes and weather_anim
+weather_anim = {
+    "200": cloud100,
+    "300": rain,
+    "500": rain,
+    "600": snow,
+    "700": cloud100,
+    "800": clearday,
+    "801": cloud25,
+    "802": cloud50,
+    "803": cloud75,
+    "804": cloud100,
+}
 
 # Sub list [animation_object, can_change_color, can_change_intensity]
 mode = [
-    [clearday, "n", "n"],  # 0: Place holder for weather mode (default)
+    [rain, "n", "n"],  # 0: Place holder for weather mode (default)
     [solid, "y", "y"],  # 1: Solid color mode - Can change color (and ideally intensity)
     [rainbow, "n", "n"],  # 2: Rainbow mode
     [pulse, "y", "y"],  # 3: Pulse/Breath mode - Can change color
@@ -312,6 +325,11 @@ mode = [
     [wth_list[0], "n", "n"],  # 9: Weather demo mode - can cycle between patterns
 ]
 
+if myWeather.current != "Clouds":
+    mode[0][0] = weather_anim[str(myWeather.id)[0] + "00"]
+else:
+    mode[0][0] = weather_anim[str(myWeather.id)]
+
 
 def main():
     # Some basic initializing
@@ -322,7 +340,6 @@ def main():
     last_mode = curr_mode
     next_update = monotonic()
     w_index = 0
-    mode[0][0] = weather_anim[str(myWeather.id)]
 
     logger.info("Main loop started.")
     try:
@@ -336,7 +353,10 @@ def main():
                         logger.debug(
                             f"Changing animation due to new weather: {myWeather.current}"
                         )
-                        mode[0][0] = weather_anim[str(myWeather.id)]
+                        if myWeather.current != "Clouds":
+                            mode[0][0] = weather_anim[str(myWeather.id)[0] + "00"]
+                        else:
+                            mode[0][0] = weather_anim[str(myWeather.id)]
 
                 if curr_mode != last_mode:
                     logger.debug(f"Mode changed. prev: {last_mode} new: {curr_mode}")
