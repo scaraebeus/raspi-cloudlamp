@@ -19,7 +19,6 @@ avail_colors = [
     color.AQUA,
     color.AMBER,
     color.WHITE,
-    color.OLD_LACE,
 ]
 
 
