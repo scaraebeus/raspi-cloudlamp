@@ -172,11 +172,6 @@ cloud75 = AnimationGroup(
     Solid(sunny25, color=YELLOW), Solid(cloudy75, color=DULL_WHITE), sync=True
 )
 cloud100 = Solid(pixels, color=DULL_WHITE)
-rainveryheavy = AnimationGroup(
-    Solid(top_half, color=DULL_WHITE),
-    SparklePulse(rain_pixels, speed=0.1, period=2, color=BLUE),
-    sync=False,
-)
 rainlight = AnimationGroup(
     Solid(top_half, color=DULL_WHITE),
     Drops(rain_pixels, speed=0.1, color=BLUE, count=4, background=DULL_WHITE),
@@ -184,12 +179,12 @@ rainlight = AnimationGroup(
 )
 rainheavy = AnimationGroup(
     Solid(top_half, color=DULL_WHITE),
-    Drops(rain_pixels, speed=0.1, color=BLUE, count=12, background=DULL_WHITE),
+    Drops(rain_pixels, speed=0.1, color=BLUE, max_period=5, count=10, background=DULL_WHITE),
     sync=False,
 )
-snowveryheavy = AnimationGroup(
+rainveryheavy = AnimationGroup(
     Solid(top_half, color=DULL_WHITE),
-    SparklePulse(rain_pixels, speed=0.1, period=2, color=WHITE),
+    Drops(rain_pixels, speed=0.1, color=BLUE, max_period=3, count=16, background=DULL_WHITE),
     sync=False,
 )
 snowlight = AnimationGroup(
@@ -199,7 +194,12 @@ snowlight = AnimationGroup(
 )
 snowheavy = AnimationGroup(
     Solid(top_half, color=DULL_WHITE),
-    Drops(rain_pixels, speed=0.1, color=WHITE, count=12, background=DULL_WHITE),
+    Drops(rain_pixels, speed=0.1, color=WHITE, max_period=5, count=10, background=DULL_WHITE),
+    sync=False,
+)
+snowveryheavy = AnimationGroup(
+    Solid(top_half, color=DULL_WHITE),
+    Drops(rain_pixels, speed=0.1, color=WHITE, max_period=3, count=16, background=DULL_WHITE),
     sync=False,
 )
 
