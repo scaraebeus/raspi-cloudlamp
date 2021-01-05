@@ -5,10 +5,8 @@ Module ver: v0.1
 
 # Imports
 import time
-import logging
+from mylog import get_logger
 import requests
-
-wthlog = logging.getLogger("raspi-cloudlamp.weather")
 
 
 class Weather(object):
@@ -30,8 +28,7 @@ class Weather(object):
         Initializes a weather class object - uses zipcode and country to determine location to get weather for.
         """
 
-        self.log = logging.getLogger("raspi-cloudlamp.weather.Weather")
-        self.log.setLevel(logging.INFO)
+        self.log = get_logger(__name__ + ".Weather")
         self.is_active = False
         self.wifi = wifi  # adafruit wifimanager object
         self.zipcode = zipcode

@@ -4,10 +4,7 @@ Remote handler for APCloudLight 2020
 
 # Imports
 from evdev import InputDevice, categorize, ecodes
-import logging
-
-# Create and setup logger
-remlog = logging.getLogger("raspi-cloudlamp.remote")
+from mylog import get_logger
 
 
 class IRRemote(object):
@@ -38,8 +35,7 @@ class IRRemote(object):
                         the pulses. Default is NEC
         """
 
-        self.log = logging.getLogger("raspi-cloudlamp.remote.IRRemote")
-        self.log.setLevel(logging.INFO)
+        self.log = get_logger(__name__ + ".IRRemote")
         self._event = None
         self.pressed = None
         self.mapping = mapping

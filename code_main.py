@@ -12,35 +12,29 @@ TODO:
 
 # Standard library imports
 import board
-import logging
 from random import randint
 import sys
 import signal
 from time import monotonic, sleep
 
 # Application library imports
+from mylog import get_logger
 import remote.remote as remote
 import weather.weather as weather
 from remote.adafruit_remote_mapping import mapping
 from secrets import secrets
 import cloud_animations.colorhandler as colorhandler
-from cloud_animations import (
-    pixels,
+from cloud_animations import pixels
+from cloud_animations.animations import (
     wth_list,
     mode,
-    lightning_list,
     reset_strip,
     weather_anim,
 )
+from cloud_animations.lightning_animations import lightning_list
 
 # Create and setup logger
-logger = logging.getLogger("raspi-cloudlamp")
-logger.setLevel(logging.INFO)
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)
-console_format = logging.Formatter("%(levelname)s: %(name)s -  %(message)s")
-console_handler.setFormatter(console_format)
-logger.addHandler(console_handler)
+logger = get_logger(__name__)
 
 # Setup Weather class
 logger.info("Initiating Weather . . .")
