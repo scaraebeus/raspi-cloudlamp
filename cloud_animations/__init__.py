@@ -25,7 +25,7 @@ from .lightningflash import LightningFlash
 from .drops import Drops
 from mylog import get_logger
 
-logger = get_logger()
+logger = get_logger(__name__)
 
 # Setup NeoPixels
 logger.info("Initializing NeoPixels . . .")
@@ -202,7 +202,9 @@ cloud100 = Solid(pixels, color=DULL_WHITE)
 
 rainlight = AnimationGroup(
     Solid(top_half, color=DULL_WHITE),
-    Drops(rain_pixels, speed=0.1, min_period=2, color=BLUE, count=4, background=DULL_WHITE),
+    Drops(
+        rain_pixels, speed=0.1, min_period=2, color=BLUE, count=4, background=DULL_WHITE
+    ),
     sync=False,
 )
 rainheavy = AnimationGroup(
@@ -231,7 +233,14 @@ rainveryheavy = AnimationGroup(
 )
 snowlight = AnimationGroup(
     Solid(top_half, color=DULL_WHITE),
-    Drops(rain_pixels, speed=0.1, color=WHITE, min_period=2, count=4, background=DULL_WHITE),
+    Drops(
+        rain_pixels,
+        speed=0.1,
+        color=WHITE,
+        min_period=2,
+        count=4,
+        background=DULL_WHITE,
+    ),
     sync=False,
 )
 snowheavy = AnimationGroup(

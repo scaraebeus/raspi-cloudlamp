@@ -1,7 +1,8 @@
 """ Simple module to handle logging configuration across multiple modules/libraries """
 import logging
 
-def get_logger(name=__name__)
+
+def get_logger(name=__name__):
     logger = logging.getLogger(name)
     h = logging.StreamHandler()
     h.setLevel(logging.INFO)

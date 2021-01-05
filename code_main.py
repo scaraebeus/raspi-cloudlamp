@@ -34,7 +34,7 @@ from cloud_animations import (
 )
 
 # Create and setup logger
-logger = get_logger()
+logger = get_logger(__name__)
 
 # Setup Weather class
 logger.info("Initiating Weather . . .")

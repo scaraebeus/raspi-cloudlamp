@@ -6,6 +6,7 @@ Remote handler for APCloudLight 2020
 from evdev import InputDevice, categorize, ecodes
 from mylog import get_logger
 
+
 class IRRemote(object):
     """Class for the IRRemote object
 
@@ -35,7 +36,6 @@ class IRRemote(object):
         """
 
         self.log = get_logger(__name__ + ".IRRemote")
-        self.log.setLevel(logging.INFO)
         self._event = None
         self.pressed = None
         self.mapping = mapping

@@ -29,7 +29,6 @@ class Weather(object):
         """
 
         self.log = get_logger(__name__ + ".Weather")
-        self.log.setLevel(logging.INFO)
         self.is_active = False
         self.wifi = wifi  # adafruit wifimanager object
         self.zipcode = zipcode
