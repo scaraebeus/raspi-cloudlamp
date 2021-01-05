@@ -77,12 +77,8 @@ def main():
                 if not is_enabled:
                     sleep(1)
                     continue
-                if curr_mode == 0:
-                    if myWeather.update():
-                        logger.debug(
-                            f"Changing animation due to new weather: {myWeather.current}"
-                        )
-                        mode[0][0] = weather_anim[str(myWeather.id)]
+
+                weather_check(curr_mode, myWeather, mode, weather_anim)
 
                 if curr_mode != last_mode:
                     logger.debug(f"Mode changed. prev: {last_mode} new: {curr_mode}")
@@ -90,19 +86,7 @@ def main():
                     mode[last_mode][0].reset()
                     last_mode = curr_mode
 
-                if curr_mode == 8 or (curr_mode == 0 and str(myWeather.id)[0] == "2"):
-                    now = monotonic()
-                    if now >= next_update:
-                        mode[8][0].cycle_count = 0
-                        mode[8][0] = lightning_list[
-                            randint(0, (len(lightning_list) - 1))
-                        ]
-                        next_update = now + randint(1, 5)
-                    if mode[8][0].cycle_count >= 3:
-                        reset_strip.animate()
-                        continue
-                    mode[8][0].animate()
-                    continue
+                next_update = cycle_lightning(curr_mode, myWeather.id, mode, lightning_list, next_update)
 
                 mode[curr_mode][0].animate()
 
