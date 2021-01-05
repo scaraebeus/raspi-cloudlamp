@@ -58,8 +58,6 @@ def main():
     is_enabled = True
     reset_strip.animate()
     curr_mode = 0
-    max_mode = len(mode) - 1
-    last_mode = curr_mode
     next_update = monotonic()
     w_index = 0
     mode[0][0] = weather_anim[str(myWeather.id)]
@@ -74,12 +72,6 @@ def main():
 
                 weather_check(curr_mode, myWeather, mode, weather_anim)
 
-                if curr_mode != last_mode:
-                    logger.debug(f"Mode changed. prev: {last_mode} new: {curr_mode}")
-                    reset_strip.animate()
-                    mode[last_mode][0].reset()
-                    last_mode = curr_mode
-
                 next_update = cycle_lightning(
                     curr_mode, myWeather.id, mode, lightning_list, next_update
                 )
@@ -88,15 +80,9 @@ def main():
 
             logger.debug(f"myRemote.received() returned True.  Key: {myRemote.pressed}")
             pressed = myRemote.pressed
-            if pressed == "Mode":
-                last_mode = curr_mode
-                if curr_mode == max_mode:
-                    curr_mode = 0
-                else:
-                    curr_mode += 1
-            elif pressed in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
-                curr_mode = int(pressed)
-            elif pressed == "Right":
+            curr_mode = process_mode_change(curr_mode, pressed, mode)
+
+            if pressed == "Right":
                 if curr_mode != 9:
                     if mode[curr_mode][1] == "y":
                         myColor.next_color()
@@ -147,11 +133,11 @@ def sigterm_handler(_signo, _stack_frame):
     sys.exit(0)
 
 
-def weather_check(c_mode, wth_cls, mode_list, anim_list):
+def weather_check(c_mode, wth_cls, mode_list, anim_list, force_update=False):
     """If c_mode is 0 (weather mode), check to see if weather has changed.  If so, update mode_list with matching weather animation from anim_list."""
     if c_mode != 0:
         return
-    if wth_cls.update():
+    if wth_cls.update(force_update):
         logger.debug(f"Changing whether animation: {wth_cls.current}")
         try:
             mode_list[c_mode][0] = anim_list[str(wth_cls.id)]
@@ -171,6 +157,29 @@ def cycle_lightning(c_mode, wth_id, mode_list, anim_list, next_update):
             mode_list[c_mode][0].cycle_count = 0
             mode_list[c_mode][0] = reset_strip
     return next_update
+
+
+def process_mode_change(c_mode, pressed, mode_list):
+    """If Mode or Numeric keys are pressed, this function processes that request and returns the new mode state and last mode state (or current if unchanged)"""
+    if pressed not in ["Mode", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+        return c_mode
+    if pressed == "Mode":
+        if c_mode == (len(mode_list) - 1):
+            new_mode = 0
+        else:
+            new_mode = c_mode + 1
+    if pressed in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+        new_mode = int(pressed)
+    if pressed == "0" and c_mode == 0:
+        weather_check(c_mode, myWeather, mode_list, weather_anim, True)
+    if new_mode != c_mode:
+        logger.debug(f"Mode changed. prev {c_mode} new: {new_mode}")
+        reset_strip.animate()
+        mode[c_mode][0].reset()
+        return new_mode
+    else:
+        logger.debug("Mode unchanged.")
+        return c_mode
 
 
 signal.signal(signal.SIGTERM, sigterm_handler)
