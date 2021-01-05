@@ -199,9 +199,10 @@ cloud75 = AnimationGroup(
     Solid(sunny25, color=YELLOW), Solid(cloudy75, color=DULL_WHITE), sync=True
 )
 cloud100 = Solid(pixels, color=DULL_WHITE)
+
 rainlight = AnimationGroup(
     Solid(top_half, color=DULL_WHITE),
-    Drops(rain_pixels, speed=0.1, color=BLUE, count=4, background=DULL_WHITE),
+    Drops(rain_pixels, speed=0.1, min_period=2, color=BLUE, count=4, background=DULL_WHITE),
     sync=False,
 )
 rainheavy = AnimationGroup(
@@ -222,7 +223,7 @@ rainveryheavy = AnimationGroup(
         rain_pixels,
         speed=0.1,
         color=BLUE,
-        max_period=3,
+        max_period=4,
         count=16,
         background=DULL_WHITE,
     ),
@@ -230,7 +231,7 @@ rainveryheavy = AnimationGroup(
 )
 snowlight = AnimationGroup(
     Solid(top_half, color=DULL_WHITE),
-    Drops(rain_pixels, speed=0.1, color=WHITE, count=4, background=DULL_WHITE),
+    Drops(rain_pixels, speed=0.1, color=WHITE, min_period=2, count=4, background=DULL_WHITE),
     sync=False,
 )
 snowheavy = AnimationGroup(
@@ -251,7 +252,7 @@ snowveryheavy = AnimationGroup(
         rain_pixels,
         speed=0.1,
         color=WHITE,
-        max_period=3,
+        max_period=4,
         count=16,
         background=DULL_WHITE,
     ),
