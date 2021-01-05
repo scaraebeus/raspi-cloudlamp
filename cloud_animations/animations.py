@@ -32,6 +32,7 @@ from .groups import (
     top_half,
     rain_pixels,
 )
+from .lightning_animations import lightning_list
 from mylog import get_logger
 
 logger = get_logger(__name__)
