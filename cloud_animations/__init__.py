@@ -1,6 +1,5 @@
 import board
 import neopixel
-import logging
 
 from adafruit_led_animation.group import AnimationGroup
 from adafruit_led_animation.helper import PixelSubset, PixelMap
@@ -24,8 +23,9 @@ from adafruit_led_animation.animation.rainbow import Rainbow
 
 from .lightningflash import LightningFlash
 from .drops import Drops
+from mylog import get_logger
 
-logger = logging.getLogger("raspi-cloudlamp.cloud_animations")
+logger = get_logger()
 
 # Setup NeoPixels
 logger.info("Initializing NeoPixels . . .")
