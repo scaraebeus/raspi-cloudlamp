@@ -166,6 +166,29 @@ def sigterm_handler(_signo, _stack_frame):
     logger.info("SIGTERM received.")
     sys.exit(0)
 
+def weather_check(c_mode, wth_cls, mode_list, anim_list):
+    """If c_mode is 0 (weather mode), check to see if weather has changed.  If so, update mode_list with matching weather animation from anim_list."""
+    if c_mode != 0:
+        return
+    if wth_cls.update():
+        logger.debug(f"Changing whether animation: {wth_cls.current}")
+        try:
+            mode_list[c_mode][0] = anim_list[str(wth_cls.id)]
+        except KeyError:
+            logger.warning(f"KeyError in anim_list: {wth_cls.id} does not exist")
+            mode_list[c_mode][0] = anim_list["def"]
+
+def cycle_lightning(c_mode, wth_id, mode_list, anim_list, next_update):
+    """If c_mode is 8 (lightning mode) or c_mode is 0 (weather mode) and current weather is T-Storms, cycle lightning animations."""
+    if (c_mode == 8) or (c_mode == 0 and str(wth_id)[0] == "2"):
+        now = monotonic()
+        if now >= next_update:
+            mode_list[c_mode][0] = anim_list[randint(0, (len(anim_list) - 1))]
+            next_update = now + randint(1, 5)
+        if mode_list[c_mode][0].cycle_count >= 3:
+            mode_list[c_mode][0].cycle_count = 0
+            mode_list[c_mode][0] = reset_strip
+    return next_update
 
 signal.signal(signal.SIGTERM, sigterm_handler)
 
