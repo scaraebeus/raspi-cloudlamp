@@ -358,4 +358,5 @@ weather_anim = {
     "802": cloud50,  # Scattered clouds
     "803": cloud75,  # Broken clouds
     "804": cloud100,  # Overcast clouds
+    "def": cloud100,  # Default weather
 }
