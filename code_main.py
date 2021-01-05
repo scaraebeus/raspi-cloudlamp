@@ -24,14 +24,14 @@ import weather.weather as weather
 from remote.adafruit_remote_mapping import mapping
 from secrets import secrets
 import cloud_animations.colorhandler as colorhandler
-from cloud_animations import (
-    pixels,
+from cloud_animations import pixels
+from cloud_animations.animations import (
     wth_list,
     mode,
-    lightning_list,
     reset_strip,
     weather_anim,
 )
+from cloud_animations.lightning_animations import lightning_list
 
 # Create and setup logger
 logger = get_logger(__name__)
