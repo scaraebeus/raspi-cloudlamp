@@ -156,7 +156,10 @@ class Weather(object):
         if (now < self._next_update or self.appid is None) and not force:
             return False
 
-        self.log.debug("Calling Weather.update() - enough time has passed")
+        if force:
+            self.log.info("Weather check forced.")
+        else:
+            self.log.debug("Calling Weather.update() - enough time has passed")
 
         if self.appid is None:
             self.log.warning("API Key not set - defaulting to clear condition")

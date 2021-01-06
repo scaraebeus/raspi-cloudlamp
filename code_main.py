@@ -145,6 +145,7 @@ def process_mode_change(c_mode, pressed, mode_list):
     if pressed in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
         new_mode = int(pressed)
     if pressed == "0" and c_mode == 0:
+        logger.info("Forcing weather check . . .")
         weather_check(c_mode, myWeather, mode_list, weather_anim, True)
     if new_mode != c_mode:
         logger.debug(f"Mode changed. prev {c_mode} new: {new_mode}")
