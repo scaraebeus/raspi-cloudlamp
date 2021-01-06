@@ -81,37 +81,23 @@ def main():
             logger.debug(f"myRemote.received() returned True.  Key: {myRemote.pressed}")
             pressed = myRemote.pressed
             curr_mode = process_mode_change(curr_mode, pressed, mode)
+            process_color_change(curr_mode, pressed, mode)
+            process_intensity_change(curr_mode, pressed, mode)
 
             if pressed == "Right":
-                if curr_mode != 9:
-                    if mode[curr_mode][1] == "y":
-                        myColor.next_color()
-                        mode[curr_mode][0].color = myColor.color
-                else:
+                if curr_mode == 9:
                     new_idx = w_index + 1
                     if new_idx > (len(wth_list) - 1):
                         new_idx = 0
                     mode[curr_mode][0] = wth_list[new_idx]
                     w_index = new_idx
             elif pressed == "Left":
-                if curr_mode != 9:
-                    if mode[curr_mode][1] == "y":
-                        myColor.prev_color()
-                        mode[curr_mode][0].color = myColor.color
-                else:
+                if curr_mode == 9:
                     new_idx = w_index - 1
                     if new_idx < 0:
                         new_idx = len(wth_list) - 1
                     mode[curr_mode][0] = wth_list[new_idx]
                     w_index = new_idx
-            elif pressed == "Up":
-                if mode[curr_mode][2] == "y":
-                    myColor.inc_intensity()
-                    mode[curr_mode][0].color = myColor.color
-            elif pressed == "Down":
-                if mode[curr_mode][2] == "y":
-                    myColor.dec_intensity()
-                    mode[curr_mode][0].color = myColor.color
             elif pressed == "Play":
                 if is_enabled:
                     reset_strip.animate()
@@ -175,11 +161,50 @@ def process_mode_change(c_mode, pressed, mode_list):
     if new_mode != c_mode:
         logger.debug(f"Mode changed. prev {c_mode} new: {new_mode}")
         reset_strip.animate()
-        mode[c_mode][0].reset()
+        mode_list[c_mode][0].reset()
         return new_mode
     else:
         logger.debug("Mode unchanged.")
         return c_mode
+
+
+def process_color_change(c_mode, pressed, mode_list):
+    """If Right or Left keys are pressed and current mode is not weather demo, process color change."""
+    if (c_mode == 9) or not (
+        (mode_list[c_mode][1] == "y") and (pressed in ["Right", "Left"])
+    ):
+        return
+    if pressed == "Right":
+        myColor.next_color()
+        mode_list[c_mode][0].color = myColor.color
+        return
+    elif pressed == "Left":
+        myColor.prev_color()
+        mode_list[c_mode][0].color = myColor.color
+        return
+    else:
+        logger.warning(
+            "In process_color_change - did not process color change correctly"
+        )
+        return
+
+
+def process_intensity_change(c_mode, pressed, mode_list):
+    if not ((mode_list[c_mode][2] == "y") and (pressed in ["Up", "Down"])):
+        return
+    if pressed == "Up":
+        myColor.inc_intensity()
+        mode_list[c_mode][0].color = myColor.color
+        return
+    elif pressed == "Down":
+        myColor.dec_intensity()
+        mode_list[c_mode][0].color = myColor.color
+        return
+    else:
+        logger.warning(
+            "In process_intensity_change - did not process intensity change correctly."
+        )
+        return
 
 
 signal.signal(signal.SIGTERM, sigterm_handler)
