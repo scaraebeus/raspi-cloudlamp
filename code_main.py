@@ -59,7 +59,6 @@ def main():
     reset_strip.animate()
     curr_mode = 0
     next_update = monotonic()
-    w_index = 0
     mode[0][0] = weather_anim[str(myWeather.id)]
 
     logger.info("Main loop started.")
@@ -84,26 +83,11 @@ def main():
             process_color_change(curr_mode, pressed, mode)
             process_intensity_change(curr_mode, pressed, mode)
 
-            if pressed == "Right":
-                if curr_mode == 9:
-                    new_idx = w_index + 1
-                    if new_idx > (len(wth_list) - 1):
-                        new_idx = 0
-                    mode[curr_mode][0] = wth_list[new_idx]
-                    w_index = new_idx
-            elif pressed == "Left":
-                if curr_mode == 9:
-                    new_idx = w_index - 1
-                    if new_idx < 0:
-                        new_idx = len(wth_list) - 1
-                    mode[curr_mode][0] = wth_list[new_idx]
-                    w_index = new_idx
-            elif pressed == "Play":
-                if is_enabled:
-                    reset_strip.animate()
-                    is_enabled = False
-                else:
-                    is_enabled = True
+            if curr_mode == 9:
+                process_pattern_change(curr_mode, pressed, mode, wth_list)
+
+            if pressed == "Play":
+                is_enabled = process_startstop(is_enabled)
 
     finally:
         cleanup_on_exit()
@@ -209,6 +193,42 @@ def process_intensity_change(c_mode, pressed, mode_list):
             "In process_intensity_change - did not process intensity change correctly."
         )
         return
+
+
+def process_pattern_change(c_mode, pressed, mode_list, weather_list):
+    if not ((c_mode == 9) and (pressed in ["Left", "Right"])):
+        return
+    cur_idx = weather_list.index(mode_list[c_mode][0])
+    if pressed == "Right":
+        new_idx = cur_idx + 1
+        if new_idx > (len(weather_list) - 1):
+            new_idx = 0
+        mode_list[c_mode][0] = weather_list[new_idx]
+        return
+    elif pressed == "Left":
+        new_idx = cur_idx - 1
+        if new_idx < 0:
+            new_idx = len(weather_list) - 1
+        mode_list[c_mode][0] = weather_list[new_idx]
+        return
+    else:
+        logger.warning(
+            "In process_pattern_change - did not process pattern change correctly."
+        )
+        return
+
+
+def process_startstop(enabled):
+    if enabled:
+        reset_strip.animate()
+        return False
+    elif not enabled:
+        return True
+    else:
+        logger.warning(
+            f"Recevied invalid enabled state.  Expected True/False, got: {enabled}."
+        )
+        return True
 
 
 signal.signal(signal.SIGTERM, sigterm_handler)
