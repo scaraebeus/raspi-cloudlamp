@@ -106,17 +106,21 @@ def main():
                     is_enabled = True
 
     finally:
-        pixels.fill(0)
-        pixels.show()
-        myRemote.close()
-        board.pin.GPIO.cleanup()
-        logger.info("Exiting raspi-cloudlamp.")
+        cleanup_on_exit()
 
 
 # Helper functions
 def sigterm_handler(_signo, _stack_frame):
     logger.info("SIGTERM received.")
     sys.exit(0)
+
+
+def cleanup_on_exit():
+    pixels.fill(0)
+    pixels.show()
+    myRemote.close()
+    board.pin.GPIO.cleanup()
+    logger.info("Exiting raspi-cloudlamp.")
 
 
 def weather_check(c_mode, wth_cls, mode_list, anim_list, force_update=False):
