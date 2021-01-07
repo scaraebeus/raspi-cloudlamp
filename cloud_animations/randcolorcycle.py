@@ -19,9 +19,10 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-"""
-Modified version of:  `adafruit_led_animation.animation.colorcycle`
-Modified by Alex P.
+""" randcolorcycle v0.2
+Modified from:  `adafruit_led_animation.animation.colorcycle`
+Modified by: Alex P
+
 Implements selection of random 'num_pixels' pixels and randomizes the timing
 between draws by setting speed between lower_speed and upper_speed (rounded
 to 2 decimals).
@@ -57,7 +58,15 @@ class RandColorCycle(Animation):
                    format. Defaults to a rainbow color cycle.
     """
 
-    def __init__(self, pixel_object, lower_speed, upper_speed, num_pixels=1, colors=RAINBOW, name=None):
+    def __init__(
+        self,
+        pixel_object,
+        lower_speed,
+        upper_speed,
+        num_pixels=1,
+        colors=RAINBOW,
+        name=None,
+    ):
         self.colors = colors
         super().__init__(pixel_object, upper_speed, colors[0], name=name)
         self._generator = self._color_generator()
@@ -91,7 +100,7 @@ class RandColorCycle(Animation):
             random.randint(0, (len(self.pixel_object) - 1))
             for _ in range(self._num_pixels)
         ]
-        animation.notify_cycles = random.randint(1,5)
+        animation.notify_cycles = random.randint(1, 5)
 
     def reset(self):
         """
