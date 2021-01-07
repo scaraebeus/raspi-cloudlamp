@@ -1,5 +1,5 @@
-"""
-Color handler for APCloudLight 2020
+""" colorhandler v0.2
+Color handler for raspi-cloudlamp
 """
 
 from adafruit_led_animation import color

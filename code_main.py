@@ -1,5 +1,4 @@
-"""
-raspi-cloudlamp v0.1
+""" raspi-cloudlamp v0.2
 By Scaraebeus (Alex P)
 
 Interactive cloud lamp built on the Raspberry PI platform.

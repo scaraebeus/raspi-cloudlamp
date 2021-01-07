@@ -19,9 +19,10 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-"""
-Modified version of:  `adafruit_led_animation.animation.colorcycle`
-Modified by Alex P.
+""" randcolorcycle v0.2
+Modified from:  `adafruit_led_animation.animation.colorcycle`
+Modified by: Alex P
+
 Implements selection of random 'num_pixels' pixels and randomizes the timing
 between draws by setting speed between lower_speed and upper_speed (rounded
 to 2 decimals).

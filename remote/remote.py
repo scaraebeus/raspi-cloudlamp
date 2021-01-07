@@ -1,5 +1,5 @@
-"""
-Remote handler for APCloudLight 2020
+""" remote v0.2
+Remote handler for raspi-cloudlamp
 """
 
 # Imports

@@ -1,4 +1,5 @@
-""" Contains all lightning based animations
+""" lightning_animations v0.2
+Contains all lightning based animations
 
 Can be called into main module by importing lightning_list which contains
 all of the callable Animations. """

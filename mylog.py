@@ -1,4 +1,6 @@
-""" Simple module to handle logging configuration across multiple modules/libraries """
+""" mylog v0.1
+Simple module to handle logging configuration across multiple modules/libraries
+"""
 import logging
 
 

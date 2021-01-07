@@ -1,6 +1,5 @@
-"""
+""" weather v0.2
 Weather handler for raspi-cloudlamp
-Module ver: v0.1
 """
 
 # Imports

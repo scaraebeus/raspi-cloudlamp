@@ -1,4 +1,6 @@
-""" Pixel groupings used by the various animations """
+""" groups v0.2
+Pixel groupings used by the various animations """
+
 from adafruit_led_animation.helper import PixelSubset, PixelMap
 
 from . import pixels

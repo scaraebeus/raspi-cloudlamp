@@ -1,4 +1,5 @@
-""" Contains animations for weather patterns and others
+""" animations v0.2
+Contains animations for weather patterns and others
 except lightning which is in lightning_animations module. """
 
 from adafruit_led_animation.group import AnimationGroup

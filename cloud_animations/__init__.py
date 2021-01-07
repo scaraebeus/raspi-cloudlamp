@@ -1,3 +1,7 @@
+""" cloud_animations v0.2
+Main init file for raspi-cloudlamp animations
+"""
+
 import board
 import neopixel
 
