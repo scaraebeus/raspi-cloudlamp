@@ -8,6 +8,10 @@ import time
 from mylog import get_logger
 import requests
 
+# Constants
+DAY = 0
+NIGHT = 1
+
 
 class Weather(object):
     """Class used to retrieve current weather conditions
@@ -36,7 +40,8 @@ class Weather(object):
         self.appid = appid
         self.current = "Undefined"
         self.id = "Undefined"
-        self.is_daytime = True
+        self._sunrise = None
+        self._sunset = None
         self.interval = interval
         self._next_update = time.monotonic()
         self.update(True)
@@ -198,10 +203,9 @@ class Weather(object):
 
         new_condition = resp["weather"][0]["main"]
         new_id = resp["weather"][0]["id"]
-        new_sunrise = resp["sys"]["sunrise"]
-        new_sunset = resp["sys"]["sunset"]
-        self.log.debug(f"Sunrise: {new_sunrise} Sunset: {new_sunset}")
-        self.set_daynight(new_sunrise, new_sunset)
+        self._sunrise = resp["sys"]["sunrise"]
+        self._sunset = resp["sys"]["sunset"]
+        self.log.debug(f"Sunrise: {self._sunrise} Sunset: {self._sunset}")
         self.log.debug(f"Retrieved weather condition update: {new_condition}")
         if self.id == new_id:
             # No Change, we'll try again in another self.interval
@@ -224,18 +228,18 @@ class Weather(object):
         self._next_update = now + self.interval
         return False
 
-    def set_daynight(self, sunrise, sunset):
-        sunrise_dt = datetime.fromtimestamp(sunrise)
-        sunset_dt = datetime.fromtimestamp(sunset)
+    def day_or_night(self):
+        sunrise_dt = datetime.fromtimestamp(self._sunrise)
+        sunset_dt = datetime.fromtimestamp(self._sunset)
         now = datetime.now()
         self.log.info(f"Sunrise: {sunrise_dt} Sunset: {sunset_dt}")
 
         if sunrise_dt < now:
             if sunset_dt > now:
-                self.is_daytime = True
+                return DAY
             else:
-                self.is_daytime = False
+                return NIGHT
         elif sunrise_dt > now:
-            self.is_daytime = False
+            return NIGHT
         else:
-            self.is_daytime = True
+            return DAY

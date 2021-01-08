@@ -19,7 +19,7 @@ from time import monotonic, sleep
 # Application library imports
 from mylog import get_logger
 import remote.remote as remote
-import weather.weather as weather
+from weather import Weather
 from remote.adafruit_remote_mapping import mapping
 from secrets import secrets
 import cloud_animations.colorhandler as colorhandler
@@ -38,10 +38,10 @@ logger = get_logger(__name__)
 # Setup Weather class
 logger.info("Initiating Weather . . .")
 try:
-    myWeather = weather.Weather(appid=secrets["ow_appid"])
+    myWeather = Weather(appid=secrets["ow_appid"])
 except KeyError:
     logger.warning("ow_appid not set in secrets file - No API Key specified")
-    myWeather = weather.Weather()
+    myWeather = Weather()
 
 # Setup IR remote
 logger.info("Initiating IRRemote . . .")
@@ -55,10 +55,11 @@ myColor = colorhandler.ColorHandler()
 def main():
     # Some basic initializing
     is_enabled = True
+    day_night = myWeather.day_or_night()
     reset_strip.animate()
     curr_mode = 0
     next_update = monotonic()
-    mode[0][0] = weather_anim[str(myWeather.id)]
+    mode[0][0] = weather_anim[str(myWeather.id)][day_night]
 
     logger.info("Main loop started.")
     try:
@@ -69,6 +70,10 @@ def main():
                     continue
 
                 weather_check(curr_mode, myWeather, mode, weather_anim)
+
+                day_night = process_daynight(
+                    curr_mode, myWeather, mode, weather_anim, day_night
+                )
 
                 next_update = cycle_lightning(
                     curr_mode, myWeather.id, mode, lightning_list, next_update
@@ -113,10 +118,23 @@ def weather_check(c_mode, wth_cls, mode_list, anim_list, force_update=False):
     if wth_cls.update(force_update):
         logger.debug(f"Changing whether animation: {wth_cls.current}")
         try:
-            mode_list[c_mode][0] = anim_list[str(wth_cls.id)]
+            mode_list[c_mode][0] = anim_list[str(wth_cls.id)][wth_cls.day_or_night()]
         except KeyError:
             logger.warning(f"KeyError in anim_list: {wth_cls.id} does not exist")
-            mode_list[c_mode][0] = anim_list["def"]
+            mode_list[c_mode][0] = anim_list["def"][wth_cls.day_or_night()]
+
+
+def process_daynight(c_mode, wth_cls, mode_list, anim_list, day_night):
+    if day_night == wth_cls.day_or_night():
+        return day_night
+    else:
+        day_night = wth_cls.day_or_night()
+
+    if c_mode != 0:
+        return day_night
+
+    mode_list[c_mode][0] = anim_list[str(wth_cls.id)][day_night]
+    return day_night
 
 
 def cycle_lightning(c_mode, wth_id, mode_list, anim_list, next_update):
@@ -184,12 +202,16 @@ def process_intensity_change(c_mode, pressed, mode_list):
     if pressed == "Up":
         # myColor.inc_intensity()
         # mode_list[c_mode][0].color = myColor.color
-        mode_list[c_mode][0].color = colorhandler.increase_intensity(mode_list[c_mode][0].color)
+        mode_list[c_mode][0].color = colorhandler.increase_intensity(
+            mode_list[c_mode][0].color
+        )
         return
     elif pressed == "Down":
         # myColor.dec_intensity()
         # mode_list[c_mode][0].color = myColor.color
-        mode_list[c_mode][0].color = colorhandler.decrease_intensity(mode_list[c_mode][0].color)
+        mode_list[c_mode][0].color = colorhandler.decrease_intensity(
+            mode_list[c_mode][0].color
+        )
         return
     else:
         logger.warning(
