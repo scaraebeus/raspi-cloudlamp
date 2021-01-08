@@ -146,6 +146,7 @@ def process_mode_change(c_mode, pressed, mode_list):
     if pressed == "0" and c_mode == 0:
         logger.info("Forcing weather check . . .")
         weather_check(c_mode, myWeather, mode_list, weather_anim, True)
+        logger.info(f"Is it daytime: {myWeather.is_daytime}")
     if new_mode != c_mode:
         logger.debug(f"Mode changed. prev {c_mode} new: {new_mode}")
         reset_strip.animate()
