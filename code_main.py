@@ -19,7 +19,7 @@ from time import monotonic, sleep
 # Application library imports
 from mylog import get_logger
 import remote.remote as remote
-from weather import Weather
+from weather.weather import Weather
 from remote.adafruit_remote_mapping import mapping
 from secrets import secrets
 import cloud_animations.colorhandler as colorhandler
@@ -59,6 +59,8 @@ def main():
     reset_strip.animate()
     curr_mode = 0
     next_update = monotonic()
+    time_check_interval = 21600
+    time_check = monotonic() + time_check_interval
     mode[0][0] = weather_anim[str(myWeather.id)][day_night]
 
     logger.info("Main loop started.")
@@ -71,9 +73,12 @@ def main():
 
                 weather_check(curr_mode, myWeather, mode, weather_anim)
 
-                day_night = process_daynight(
-                    curr_mode, myWeather, mode, weather_anim, day_night
-                )
+                now = monotonic()
+                if now > time_check:
+                    day_night = process_daynight(
+                        curr_mode, myWeather, mode, weather_anim, day_night
+                    )
+                    time_check = now + time_check_interval
 
                 next_update = cycle_lightning(
                     curr_mode, myWeather.id, mode, lightning_list, next_update
@@ -164,7 +169,6 @@ def process_mode_change(c_mode, pressed, mode_list):
     if pressed == "0" and c_mode == 0:
         logger.info("Forcing weather check . . .")
         weather_check(c_mode, myWeather, mode_list, weather_anim, True)
-        logger.info(f"Is it daytime: {myWeather.is_daytime}")
     if new_mode != c_mode:
         logger.debug(f"Mode changed. prev {c_mode} new: {new_mode}")
         reset_strip.animate()
