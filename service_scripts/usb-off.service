@@ -1,0 +1,13 @@
+[Unit]
+Description=Turn off USB
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c "echo 0x0 > /sys/devices/platform/soc/20980000.usb/buspower"
+RemainAfterExit=True
+ExecStop=/bin/bash -c "echo 0x1 > /sys/devices/platform/soc/20980000.usb/buspower"
+
+[Install]
+WantedBy=multi-user.target
+
