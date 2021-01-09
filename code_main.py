@@ -75,6 +75,7 @@ def main():
                 )
 
                 mode[curr_mode][0].animate()
+                sleep(0.01)
 
             logger.debug(f"myRemote.received() returned True.  Key: {myRemote.pressed}")
             pressed = myRemote.pressed
@@ -184,12 +185,16 @@ def process_intensity_change(c_mode, pressed, mode_list):
     if pressed == "Up":
         # myColor.inc_intensity()
         # mode_list[c_mode][0].color = myColor.color
-        mode_list[c_mode][0].color = colorhandler.increase_intensity(mode_list[c_mode][0].color)
+        mode_list[c_mode][0].color = colorhandler.increase_intensity(
+            mode_list[c_mode][0].color
+        )
         return
     elif pressed == "Down":
         # myColor.dec_intensity()
         # mode_list[c_mode][0].color = myColor.color
-        mode_list[c_mode][0].color = colorhandler.decrease_intensity(mode_list[c_mode][0].color)
+        mode_list[c_mode][0].color = colorhandler.decrease_intensity(
+            mode_list[c_mode][0].color
+        )
         return
     else:
         logger.warning(
