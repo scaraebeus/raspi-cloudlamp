@@ -85,6 +85,7 @@ def main():
                 )
 
                 mode[curr_mode][0].animate()
+                sleep(0.01)
 
             logger.debug(f"myRemote.received() returned True.  Key: {myRemote.pressed}")
             pressed = myRemote.pressed
