@@ -1,0 +1,13 @@
+[Unit]
+Description=Turn off HDMI
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c "/usr/bin/tvservice -o"
+RemainAfterExit=True
+ExecStop=/bin/bash -c "/usr/bin/tvservice -p"
+
+[Install]
+WantedBy=multi-user.target
+
