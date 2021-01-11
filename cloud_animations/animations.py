@@ -6,10 +6,8 @@ from adafruit_led_animation.group import AnimationGroup
 from adafruit_led_animation.color import (
     RED,
     YELLOW,
-    PURPLE,
     BLUE,
     WHITE,
-    JADE,
     BLACK,
 )
 from adafruit_led_animation.animation.comet import Comet
@@ -135,11 +133,11 @@ sparkle = Sparkle(pixels, speed=0.1, color=RED, num_sparkles=10)
 r_sparkle = RainbowSparkle(pixels, speed=0.1, num_sparkles=15)
 
 c_scan = Comet(
-    cross_strips, speed=0.2, color=PURPLE, tail_length=3, bounce=False, ring=True
+    cross_strips, speed=0.2, color=RED, tail_length=3, bounce=False, ring=True
 )
 
 h_scan = Comet(
-    hatch_strips, speed=0.2, color=JADE, tail_length=4, bounce=False, ring=True
+    hatch_strips, speed=0.2, color=RED, tail_length=4, bounce=False, ring=True
 )
 
 reset_strip = Solid(pixels, color=BLACK)

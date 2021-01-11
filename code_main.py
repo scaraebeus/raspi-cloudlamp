@@ -47,10 +47,6 @@ except KeyError:
 logger.info("Initiating IRRemote . . .")
 myRemote = remote.IRRemote(mapping)
 
-# Setup ColorHandler
-logger.info("Initiating ColorHandler . . .")
-myColor = colorhandler.ColorHandler()
-
 
 def main():
     # Some basic initializing
@@ -187,12 +183,32 @@ def process_color_change(c_mode, pressed, mode_list):
     ):
         return
     if pressed == "Right":
-        myColor.next_color()
-        mode_list[c_mode][0].color = myColor.color
+        if c_mode == 4:
+            mode_list[c_mode][0].color = colorhandler.next_color(
+                mode_list[c_mode][0]._sparkle_color
+            )
+        elif (c_mode == 6) or (c_mode == 7):
+            mode_list[c_mode][0].color = colorhandler.next_color(
+                mode_list[c_mode][0]._computed_color
+            )
+        else:
+            mode_list[c_mode][0].color = colorhandler.next_color(
+                mode_list[c_mode][0].color
+            )
         return
     elif pressed == "Left":
-        myColor.prev_color()
-        mode_list[c_mode][0].color = myColor.color
+        if c_mode == 4:
+            mode_list[c_mode][0].color = colorhandler.prev_color(
+                mode_list[c_mode][0]._sparkle_color
+            )
+        elif (c_mode == 6) or (c_mode == 7):
+            mode_list[c_mode][0].color = colorhandler.prev_color(
+                mode_list[c_mode][0]._computed_color
+            )
+        else:
+            mode_list[c_mode][0].color = colorhandler.prev_color(
+                mode_list[c_mode][0].color
+            )
         return
     else:
         logger.warning(
@@ -205,18 +221,32 @@ def process_intensity_change(c_mode, pressed, mode_list):
     if not ((mode_list[c_mode][2] == "y") and (pressed in ["Up", "Down"])):
         return
     if pressed == "Up":
-        # myColor.inc_intensity()
-        # mode_list[c_mode][0].color = myColor.color
-        mode_list[c_mode][0].color = colorhandler.increase_intensity(
-            mode_list[c_mode][0].color
-        )
+        if c_mode == 4:
+            mode_list[c_mode][0].color = colorhandler.increase_intensity(
+                mode_list[c_mode][0]._sparkle_color
+            )
+        elif (c_mode == 6) or (c_mode == 7):
+            mode_list[c_mode][0].color = colorhandler.increase_intensity(
+                mode_list[c_mode][0]._computed_color
+            )
+        else:
+            mode_list[c_mode][0].color = colorhandler.increase_intensity(
+                mode_list[c_mode][0].color
+            )
         return
     elif pressed == "Down":
-        # myColor.dec_intensity()
-        # mode_list[c_mode][0].color = myColor.color
-        mode_list[c_mode][0].color = colorhandler.decrease_intensity(
-            mode_list[c_mode][0].color
-        )
+        if c_mode == 4:
+            mode_list[c_mode][0].color = colorhandler.decrease_intensity(
+                mode_list[c_mode][0]._sparkle_color
+            )
+        elif (c_mode == 6) or (c_mode == 7):
+            mode_list[c_mode][0].color = colorhandler.decrease_intensity(
+                mode_list[c_mode][0]._computed_color
+            )
+        else:
+            mode_list[c_mode][0].color = colorhandler.decrease_intensity(
+                mode_list[c_mode][0].color
+            )
         return
     else:
         logger.warning(
