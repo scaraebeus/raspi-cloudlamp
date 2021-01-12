@@ -50,14 +50,16 @@ myRemote = remote.IRRemote(mapping)
 
 def main():
     # Some basic initializing
-    is_enabled = True
-    day_night = myWeather.day_or_night()
     reset_strip.animate()
     curr_mode = 0
-    next_update = monotonic()
-    time_check_interval = 21600
-    time_check = monotonic() + time_check_interval
+    day_night = myWeather.day_or_night()
     mode[0][0] = weather_anim[str(myWeather.id)][day_night]
+
+    weather_check_interval = 3600
+    daynight_check_interval = 21600
+    next_update = monotonic()
+    next_weather_check = next_update + weather_check_interval
+    next_daynight_check = next_update + day_night_check_interval
 
     logger.info("Main loop started.")
     try:
@@ -67,14 +69,16 @@ def main():
                     sleep(1)
                     continue
 
-                weather_check(curr_mode, myWeather, mode, weather_anim)
-
                 now = monotonic()
-                if now > time_check:
+                if now > next_weather_check:
+                    weather_check(curr_mode, myWeather, mode, weather_anim)
+                    next_weather_check = now + weather_check_interval
+
+                if now > next_daynight_check:
                     day_night = process_daynight(
                         curr_mode, myWeather, mode, weather_anim, day_night
                     )
-                    time_check = now + time_check_interval
+                    next_daynight_check = now + daynight_check_interval
 
                 next_update = cycle_lightning(
                     curr_mode, myWeather.id, mode, lightning_list, next_update
@@ -113,11 +117,11 @@ def cleanup_on_exit():
     logger.info("Exiting raspi-cloudlamp.")
 
 
-def weather_check(c_mode, wth_cls, mode_list, anim_list, force_update=False):
+def weather_check(c_mode, wth_cls, mode_list, anim_list):
     """If c_mode is 0 (weather mode), check to see if weather has changed.  If so, update mode_list with matching weather animation from anim_list."""
     if c_mode != 0:
         return
-    if wth_cls.update(force_update):
+    if wth_cls.update():
         logger.debug(f"Changing whether animation: {wth_cls.current}")
         try:
             mode_list[c_mode][0] = anim_list[str(wth_cls.id)][wth_cls.day_or_night()]
@@ -165,7 +169,7 @@ def process_mode_change(c_mode, pressed, mode_list):
         new_mode = int(pressed)
     if pressed == "0" and c_mode == 0:
         logger.info("Forcing weather check . . .")
-        weather_check(c_mode, myWeather, mode_list, weather_anim, True)
+        weather_check(c_mode, myWeather, mode_list, weather_anim)
     if new_mode != c_mode:
         logger.debug(f"Mode changed. prev {c_mode} new: {new_mode}")
         reset_strip.animate()
