@@ -124,7 +124,7 @@ def weather_check(c_mode, wth_cls, mode_list, anim_list):
     if c_mode != 0:
         return
     if wth_cls.update():
-        logger.debug(f"Changing whether animation: {wth_cls.current}")
+        logger.debug(f"Changing whether animation: {wth_cls.id}")
         try:
             mode_list[c_mode][0] = anim_list[str(wth_cls.id)][wth_cls.day_or_night()]
         except KeyError:
@@ -175,8 +175,8 @@ def process_mode_change(c_mode, pressed, mode_list):
         logger.info(f"Condition id: {myWeather.id} Day_night: {myWeather.day_or_night()}")
     if new_mode != c_mode:
         logger.debug(f"Mode changed. prev {c_mode} new: {new_mode}")
-        reset_strip.animate()
         mode_list[c_mode][0].reset()
+        reset_strip.animate()
         return new_mode
     else:
         logger.debug("Mode unchanged.")
@@ -271,12 +271,14 @@ def process_pattern_change(c_mode, pressed, mode_list, weather_list):
         if new_idx > (len(weather_list) - 1):
             new_idx = 0
         mode_list[c_mode][0] = weather_list[new_idx]
+        reset_strip.animate()
         return
     elif pressed == "Left":
         new_idx = cur_idx - 1
         if new_idx < 0:
             new_idx = len(weather_list) - 1
         mode_list[c_mode][0] = weather_list[new_idx]
+        reset_strip.animate()
         return
     else:
         logger.warning(
