@@ -4,7 +4,6 @@ Weather handler for raspi-cloudlamp
 
 # Imports
 from datetime import datetime
-import time
 from mylog import get_logger
 import requests
 

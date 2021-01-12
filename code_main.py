@@ -59,7 +59,9 @@ def main():
     daynight_check_interval = 21600
     next_update = monotonic()
     next_weather_check = next_update + weather_check_interval
-    next_daynight_check = next_update + day_night_check_interval
+    next_daynight_check = next_update + daynight_check_interval
+
+    is_enabled = True
 
     logger.info("Main loop started.")
     try:
