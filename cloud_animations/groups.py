@@ -1,6 +1,8 @@
 """ groups v0.2
 Pixel groupings used by the various animations """
 
+import random
+
 from adafruit_led_animation.helper import PixelSubset, PixelMap
 
 from . import pixels
@@ -38,6 +40,17 @@ cloudy50 = PixelMap(pixels, [(32, 48), (0, 16)])
 cloudy25 = PixelMap(pixels, [(32, 48), (0, 8)])
 top_half = PixelSubset(pixels, 0, 32)
 rain_pixels = PixelSubset(pixels, 32, 48)
+
+# Setup stars groups
+star_count = 6
+star_set = []
+while len(star_set) < star_count:
+    used = [star for star in star_set]
+    stars = [n for n in range(len(pixels)) if n not in used]
+    s = random.choice(stars)
+    star_set.append(s)
+
+clear_night = PixelMap(pixels, star_set, individual_pixels=True)
 
 # Lightning Path Groups
 lightning_path_1 = PixelMap(

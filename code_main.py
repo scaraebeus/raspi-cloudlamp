@@ -112,10 +112,8 @@ def sigterm_handler(_signo, _stack_frame):
 
 
 def cleanup_on_exit():
-    pixels.fill(0)
-    pixels.show()
     myRemote.close()
-    board.pin.GPIO.cleanup()
+    pixels.deinit()
     logger.info("Exiting raspi-cloudlamp.")
 
 

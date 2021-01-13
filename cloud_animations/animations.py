@@ -30,6 +30,7 @@ from .groups import (
     cloudy75,
     top_half,
     rain_pixels,
+    clear_night,
 )
 from .lightning_animations import lightning_list
 from mylog import get_logger
@@ -38,6 +39,7 @@ logger = get_logger(__name__)
 
 # Weather Animations
 clearday = Solid(pixels, color=YELLOW)
+clearnight = Solid(clear_night, color=DULL_WHITE)
 
 cloud25 = AnimationGroup(
     Solid(sunny75, color=YELLOW), Solid(cloudy25, color=DULL_WHITE), sync=True
@@ -144,6 +146,7 @@ reset_strip = Solid(pixels, color=BLACK)
 
 wth_list = [
     clearday,
+    clearnight,
     cloud25,
     cloud50,
     cloud75,
@@ -224,7 +227,7 @@ weather_anim = {
     "762": [cloud100, cloud100],  # Volcanic Ash
     "771": [cloud100, cloud100],  # Squalls
     "781": [cloud100, cloud100],  # Tornado
-    "800": [clearday, clearday],  # Clear sky
+    "800": [clearday, clearnight],  # Clear sky
     "801": [cloud25, cloud25],  # Few clouds
     "802": [cloud50, cloud50],  # Scattered clouds
     "803": [cloud75, cloud75],  # Broken clouds
