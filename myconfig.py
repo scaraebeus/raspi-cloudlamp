@@ -70,9 +70,20 @@ def process_option(section, option):
 
 
 def validate_parameters(p):
-    keys = p.keys()
-    validation_keys = default_parameters.keys()
-    for v_key in validation_keys:
-        if (v_key not in keys) or (p[v_key] == ""):
+    for v_key in default_parameters.keys():
+        if (v_key not in p.keys()) or (p[v_key] == ""):
             p[v_key] = default_parameters[v_key]
+    return
+
+
+def store_configuration(parameters, configfile="rcl-config.ini"):
+    for key in parameters.keys():
+        if key in config.options("main"):
+            config["main"][key] = parameters[key]
+        elif key in config.options("state"):
+            config["state"][key] = parameters[key]
+        else:
+            config["other"][key] = parameters[key]
+    with open(configfile, "w") as file:
+        config.write(file)
     return
