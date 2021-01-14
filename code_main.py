@@ -18,6 +18,7 @@ from time import monotonic, sleep
 
 # Application library imports
 from mylog import get_logger
+from myconfig import load_config_file
 import remote.remote as remote
 from weather.weather import Weather
 from remote.adafruit_remote_mapping import mapping
@@ -35,10 +36,26 @@ from cloud_animations.lightning_animations import lightning_list
 # Create and setup logger
 logger = get_logger(__name__)
 
+# Load config file info
+config = load_config_file()
+if config is None:
+    logger.warning("Config file not loaded.")
+zip = config.get("main", "zipcode", fallback="97007")
+cntry = config.get("main", "country", fallback="us")
+ow_appid = config.get("main", "ow_appid", fallback=None)
+enabled = config.getboolean("state", "is_enabled", fallback=True)
+current_mode = config.getint("state", "current_mode", fallback=0)
+mode_1_color = eval(str(config.get("state", "mode_1_color", fallback=(255,0,0))))
+mode_3_color = eval(str(config.get("state", "mode_3_color", fallback=(255,0,0))))
+mode_4_color = eval(str(config.get("state", "mode_4_color", fallback=(255,0,0))))
+mode_6_color = eval(str(config.get("state", "mode_6_color", fallback=(255,0,0))))
+mode_7_color = eval(str(config.get("state", "mode_7_color", fallback=(255,0,0))))
+mode_9_index = config.getint("state", "mode_9_index", fallback=0)
+
 # Setup Weather class
 logger.info("Initiating Weather . . .")
 try:
-    myWeather = Weather(appid=secrets["ow_appid"])
+    myWeather = Weather(zipcode=zip, country=cntry, appid=ow_appid)
 except KeyError:
     logger.warning("ow_appid not set in secrets file - No API Key specified")
     myWeather = Weather()
@@ -51,9 +68,15 @@ myRemote = remote.IRRemote(mapping)
 def main():
     # Some basic initializing
     reset_strip.animate()
-    curr_mode = 0
+    curr_mode = current_mode
     day_night = myWeather.day_or_night()
     mode[0][0] = weather_anim[str(myWeather.id)][day_night]
+    mode[1][0].color = mode_1_color
+    mode[3][0].color = mode_3_color
+    mode[4][0].color = mode_4_color
+    mode[6][0].color = mode_6_color
+    mode[7][0].color = mode_7_color
+    mode[9][0] = wth_list[mode_9_index]
 
     weather_check_interval = 3600
     daynight_check_interval = 21600
@@ -61,7 +84,7 @@ def main():
     next_weather_check = next_update + weather_check_interval
     next_daynight_check = next_update + daynight_check_interval
 
-    is_enabled = True
+    is_enabled = enabled
 
     logger.info("Main loop started.")
     try:
@@ -87,7 +110,7 @@ def main():
                 )
 
                 mode[curr_mode][0].animate()
-                sleep(0.01)
+                sleep(0.03)
 
             logger.debug(f"myRemote.received() returned True.  Key: {myRemote.pressed}")
             pressed = myRemote.pressed
