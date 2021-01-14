@@ -133,6 +133,10 @@ def main():
             if pressed == "Play":
                 is_enabled = process_startstop(is_enabled)
 
+            if pressed == "Enter":
+                save_state(parameters)
+                logger.info("Current configuration saved.")
+
     finally:
         cleanup_on_exit()
 
