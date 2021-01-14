@@ -36,20 +36,6 @@ logger = get_logger(__name__)
 
 # Load config file info
 parameters = load_configuration()
-# config = load_config_file()
-# if config is None:
-#    logger.warning("Config file not loaded.")
-# zip = config.get("main", "zipcode", fallback="97007")
-# cntry = config.get("main", "country", fallback="us")
-# ow_appid = config.get("main", "ow_appid", fallback=None)
-# enabled = config.getboolean("state", "is_enabled", fallback=True)
-# current_mode = config.getint("state", "current_mode", fallback=0)
-# mode_1_color = eval(str(config.get("state", "mode_1_color", fallback=(255,0,0))))
-# mode_3_color = eval(str(config.get("state", "mode_3_color", fallback=(255,0,0))))
-# mode_4_color = eval(str(config.get("state", "mode_4_color", fallback=(255,0,0))))
-# mode_6_color = eval(str(config.get("state", "mode_6_color", fallback=(255,0,0))))
-# mode_7_color = eval(str(config.get("state", "mode_7_color", fallback=(255,0,0))))
-# mode_9_index = config.getint("state", "mode_9_index", fallback=0)
 
 # Setup Weather class
 logger.info("Initiating Weather . . .")
