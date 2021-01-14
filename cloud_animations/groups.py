@@ -42,7 +42,7 @@ top_half = PixelSubset(pixels, 0, 32)
 rain_pixels = PixelSubset(pixels, 32, 48)
 
 # Setup stars groups
-star_count = 6
+star_count = 12
 star_set = []
 while len(star_set) < star_count:
     used = [star for star in star_set]

@@ -10,7 +10,6 @@ TODO:
 """
 
 # Standard library imports
-import board
 from random import randint
 import sys
 import signal
@@ -18,11 +17,10 @@ from time import monotonic, sleep
 
 # Application library imports
 from mylog import get_logger
-from myconfig import load_config_file
+from myconfig import load_configuration
 import remote.remote as remote
 from weather.weather import Weather
 from remote.adafruit_remote_mapping import mapping
-from secrets import secrets
 import cloud_animations.colorhandler as colorhandler
 from cloud_animations import pixels
 from cloud_animations.animations import (
@@ -37,25 +35,30 @@ from cloud_animations.lightning_animations import lightning_list
 logger = get_logger(__name__)
 
 # Load config file info
-config = load_config_file()
-if config is None:
-    logger.warning("Config file not loaded.")
-zip = config.get("main", "zipcode", fallback="97007")
-cntry = config.get("main", "country", fallback="us")
-ow_appid = config.get("main", "ow_appid", fallback=None)
-enabled = config.getboolean("state", "is_enabled", fallback=True)
-current_mode = config.getint("state", "current_mode", fallback=0)
-mode_1_color = eval(str(config.get("state", "mode_1_color", fallback=(255,0,0))))
-mode_3_color = eval(str(config.get("state", "mode_3_color", fallback=(255,0,0))))
-mode_4_color = eval(str(config.get("state", "mode_4_color", fallback=(255,0,0))))
-mode_6_color = eval(str(config.get("state", "mode_6_color", fallback=(255,0,0))))
-mode_7_color = eval(str(config.get("state", "mode_7_color", fallback=(255,0,0))))
-mode_9_index = config.getint("state", "mode_9_index", fallback=0)
+parameters = load_configuration()
+# config = load_config_file()
+# if config is None:
+#    logger.warning("Config file not loaded.")
+# zip = config.get("main", "zipcode", fallback="97007")
+# cntry = config.get("main", "country", fallback="us")
+# ow_appid = config.get("main", "ow_appid", fallback=None)
+# enabled = config.getboolean("state", "is_enabled", fallback=True)
+# current_mode = config.getint("state", "current_mode", fallback=0)
+# mode_1_color = eval(str(config.get("state", "mode_1_color", fallback=(255,0,0))))
+# mode_3_color = eval(str(config.get("state", "mode_3_color", fallback=(255,0,0))))
+# mode_4_color = eval(str(config.get("state", "mode_4_color", fallback=(255,0,0))))
+# mode_6_color = eval(str(config.get("state", "mode_6_color", fallback=(255,0,0))))
+# mode_7_color = eval(str(config.get("state", "mode_7_color", fallback=(255,0,0))))
+# mode_9_index = config.getint("state", "mode_9_index", fallback=0)
 
 # Setup Weather class
 logger.info("Initiating Weather . . .")
 try:
-    myWeather = Weather(zipcode=zip, country=cntry, appid=ow_appid)
+    myWeather = Weather(
+        zipcode=parameters["zipcode"],
+        country=parameters["country"],
+        appid=parameters["ow_appid"],
+    )
 except KeyError:
     logger.warning("ow_appid not set in secrets file - No API Key specified")
     myWeather = Weather()
@@ -68,15 +71,15 @@ myRemote = remote.IRRemote(mapping)
 def main():
     # Some basic initializing
     reset_strip.animate()
-    curr_mode = current_mode
+    curr_mode = parameters["current_mode"]
     day_night = myWeather.day_or_night()
     mode[0][0] = weather_anim[str(myWeather.id)][day_night]
-    mode[1][0].color = mode_1_color
-    mode[3][0].color = mode_3_color
-    mode[4][0].color = mode_4_color
-    mode[6][0].color = mode_6_color
-    mode[7][0].color = mode_7_color
-    mode[9][0] = wth_list[mode_9_index]
+    mode[1][0].color = parameters["mode1_color"]
+    mode[3][0].color = parameters["mode3_color"]
+    mode[4][0].color = parameters["mode4_color"]
+    mode[6][0].color = parameters["mode6_color"]
+    mode[7][0].color = parameters["mode7_color"]
+    mode[9][0] = wth_list[parameters["mode9_index"]]
 
     weather_check_interval = 3600
     daynight_check_interval = 21600
@@ -84,7 +87,7 @@ def main():
     next_weather_check = next_update + weather_check_interval
     next_daynight_check = next_update + daynight_check_interval
 
-    is_enabled = enabled
+    is_enabled = parameters["is_enabled"]
 
     logger.info("Main loop started.")
     try:
@@ -193,7 +196,9 @@ def process_mode_change(c_mode, pressed, mode_list):
     if pressed == "0" and c_mode == 0:
         logger.info("Forcing weather check . . .")
         weather_check(c_mode, myWeather, mode_list, weather_anim)
-        logger.info(f"Condition id: {myWeather.id} Day_night: {myWeather.day_or_night()}")
+        logger.info(
+            f"Condition id: {myWeather.id} Day_night: {myWeather.day_or_night()}"
+        )
     if new_mode != c_mode:
         logger.debug(f"Mode changed. prev {c_mode} new: {new_mode}")
         mode_list[c_mode][0].reset()
