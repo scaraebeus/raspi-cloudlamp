@@ -10,9 +10,11 @@ from adafruit_led_animation.color import (
     WHITE,
     BLACK,
 )
-from adafruit_led_animation.animation.comet import Comet
+#from adafruit_led_animation.animation.comet import Comet
+from .rcl_comet import Comet
 from adafruit_led_animation.animation.pulse import Pulse
-from adafruit_led_animation.animation.sparkle import Sparkle
+#from adafruit_led_animation.animation.sparkle import Sparkle
+from .rcl_sparkle import Sparkle
 from adafruit_led_animation.animation.rainbowsparkle import RainbowSparkle
 from adafruit_led_animation.animation.solid import Solid
 from adafruit_led_animation.animation.rainbow import Rainbow
