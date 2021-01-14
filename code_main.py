@@ -17,7 +17,7 @@ from time import monotonic, sleep
 
 # Application library imports
 from mylog import get_logger
-from myconfig import load_configuration
+from myconfig import load_configuration, store_configuration
 import remote.remote as remote
 from weather.weather import Weather
 from remote.adafruit_remote_mapping import mapping
@@ -83,9 +83,11 @@ def main():
 
     weather_check_interval = 3600
     daynight_check_interval = 21600
+    save_interval = 900
     next_update = monotonic()
     next_weather_check = next_update + weather_check_interval
     next_daynight_check = next_update + daynight_check_interval
+    next_save_check = next_update + save_interval
 
     is_enabled = parameters["is_enabled"]
 
@@ -111,6 +113,10 @@ def main():
                 next_update = cycle_lightning(
                     curr_mode, myWeather.id, mode, lightning_list, next_update
                 )
+
+                if now > next_save_check:
+                    save_state(parameters)
+                    next_save_check = now + save_interval
 
                 mode[curr_mode][0].animate()
                 sleep(0.03)
@@ -138,6 +144,7 @@ def sigterm_handler(_signo, _stack_frame):
 
 
 def cleanup_on_exit():
+    save_state(parameters)
     myRemote.close()
     pixels.deinit()
     logger.info("Exiting raspi-cloudlamp.")
@@ -203,6 +210,7 @@ def process_mode_change(c_mode, pressed, mode_list):
         logger.debug(f"Mode changed. prev {c_mode} new: {new_mode}")
         mode_list[c_mode][0].reset()
         reset_strip.animate()
+        parameters["current_mode"] = new_mode
         return new_mode
     else:
         logger.debug("Mode unchanged.")
@@ -220,33 +228,42 @@ def process_color_change(c_mode, pressed, mode_list):
             mode_list[c_mode][0].color = colorhandler.next_color(
                 mode_list[c_mode][0]._sparkle_color
             )
+            parameters["mode" + str(c_mode) + "_color"] = mode_list[c_mode][
+                0
+            ]._sparkle_color
         elif (c_mode == 6) or (c_mode == 7):
             mode_list[c_mode][0].color = colorhandler.next_color(
                 mode_list[c_mode][0]._computed_color
             )
+            parameters["mode" + str(c_mode) + "_color"] = mode_list[c_mode][
+                0
+            ]._computed_color
         else:
             mode_list[c_mode][0].color = colorhandler.next_color(
                 mode_list[c_mode][0].color
             )
+            parameters["mode" + str(c_mode) + "_color"] = mode_list[c_mode][0].color
         return
     elif pressed == "Left":
         if c_mode == 4:
             mode_list[c_mode][0].color = colorhandler.prev_color(
                 mode_list[c_mode][0]._sparkle_color
             )
+            parameters["mode" + str(c_mode) + "_color"] = mode_list[c_mode][
+                0
+            ]._sparkle_color
         elif (c_mode == 6) or (c_mode == 7):
             mode_list[c_mode][0].color = colorhandler.prev_color(
                 mode_list[c_mode][0]._computed_color
             )
+            parameters["mode" + str(c_mode) + "_color"] = mode_list[c_mode][
+                0
+            ]._computed_color
         else:
             mode_list[c_mode][0].color = colorhandler.prev_color(
                 mode_list[c_mode][0].color
             )
-        return
-    else:
-        logger.warning(
-            "In process_color_change - did not process color change correctly"
-        )
+            parameters["mode" + str(c_mode) + "_color"] = mode_list[c_mode][0].color
         return
 
 
@@ -258,33 +275,42 @@ def process_intensity_change(c_mode, pressed, mode_list):
             mode_list[c_mode][0].color = colorhandler.increase_intensity(
                 mode_list[c_mode][0]._sparkle_color
             )
+            parameters["mode" + str(c_mode) + "_color"] = mode_list[c_mode][
+                0
+            ]._sparkle_color
         elif (c_mode == 6) or (c_mode == 7):
             mode_list[c_mode][0].color = colorhandler.increase_intensity(
                 mode_list[c_mode][0]._computed_color
             )
+            parameters["mode" + str(c_mode) + "_color"] = mode_list[c_mode][
+                0
+            ]._computed_color
         else:
             mode_list[c_mode][0].color = colorhandler.increase_intensity(
                 mode_list[c_mode][0].color
             )
+            parameters["mode" + str(c_mode) + "_color"] = mode_list[c_mode][0].color
         return
     elif pressed == "Down":
         if c_mode == 4:
             mode_list[c_mode][0].color = colorhandler.decrease_intensity(
                 mode_list[c_mode][0]._sparkle_color
             )
+            parameters["mode" + str(c_mode) + "_color"] = mode_list[c_mode][
+                0
+            ]._sparkle_color
         elif (c_mode == 6) or (c_mode == 7):
             mode_list[c_mode][0].color = colorhandler.decrease_intensity(
                 mode_list[c_mode][0]._computed_color
             )
+            parameters["mode" + str(c_mode) + "_color"] = mode_list[c_mode][
+                0
+            ]._computed_color
         else:
             mode_list[c_mode][0].color = colorhandler.decrease_intensity(
                 mode_list[c_mode][0].color
             )
-        return
-    else:
-        logger.warning(
-            "In process_intensity_change - did not process intensity change correctly."
-        )
+            parameters["mode" + str(c_mode) + "_color"] = mode_list[c_mode][0].color
         return
 
 
@@ -296,34 +322,37 @@ def process_pattern_change(c_mode, pressed, mode_list, weather_list):
         new_idx = cur_idx + 1
         if new_idx > (len(weather_list) - 1):
             new_idx = 0
-        mode_list[c_mode][0] = weather_list[new_idx]
-        reset_strip.animate()
-        return
     elif pressed == "Left":
         new_idx = cur_idx - 1
         if new_idx < 0:
             new_idx = len(weather_list) - 1
-        mode_list[c_mode][0] = weather_list[new_idx]
-        reset_strip.animate()
-        return
-    else:
-        logger.warning(
-            "In process_pattern_change - did not process pattern change correctly."
-        )
-        return
+    mode_list[c_mode][0] = weather_list[new_idx]
+    parameters["mode9_index"] = new_idx
+    reset_strip.animate()
+    return
 
 
 def process_startstop(enabled):
     if enabled:
         reset_strip.animate()
+        parameters["is_enabled"] = False
         return False
     elif not enabled:
+        parameters["is_enabled"] = True
         return True
-    else:
-        logger.warning(
-            f"Recevied invalid enabled state.  Expected True/False, got: {enabled}."
-        )
-        return True
+
+
+def save_state(parameters):
+    p = load_configuration()
+    has_changed = False
+    for key in parameters.keys():
+        if (key in p.keys()) and (parameters[key] != p[key]):
+            has_changed = True
+        elif key not in p.keys():
+            has_changed = True
+    if has_changed:
+        store_configuration(parameters)
+    return
 
 
 signal.signal(signal.SIGTERM, sigterm_handler)

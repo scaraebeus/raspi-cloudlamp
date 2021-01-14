@@ -78,12 +78,14 @@ def validate_parameters(p):
 
 def store_configuration(parameters, configfile="rcl-config.ini"):
     for key in parameters.keys():
-        if key in config.options("main"):
-            config["main"][key] = parameters[key]
-        elif key in config.options("state"):
-            config["state"][key] = parameters[key]
-        else:
-            config["other"][key] = parameters[key]
+        found = False
+        for section in config.sections():
+            if key in config.options(section):
+                config[section][key] = str(parameters[key])
+                found = True
+                break
+        if not found:
+            config["other"][key] = str(parameters[key])
     with open(configfile, "w") as file:
         config.write(file)
     return
