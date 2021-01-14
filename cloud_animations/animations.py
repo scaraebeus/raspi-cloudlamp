@@ -129,6 +129,7 @@ snowveryheavy = AnimationGroup(
 )
 
 solid = Solid(pixels, color=RED)
+solid.speed  = 0.2
 rainbow = Rainbow(pixels, speed=0.1, period=2)
 pulse = Pulse(pixels, speed=0.1, period=6, color=RED)
 sparkle = Sparkle(pixels, speed=0.1, color=RED, num_sparkles=10)
