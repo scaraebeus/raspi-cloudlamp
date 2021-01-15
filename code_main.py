@@ -214,15 +214,11 @@ def process_color_change(c_mode, pressed, mode_list):
     ):
         return
     if pressed == "Right":
-        mode_list[c_mode][0].color = colorhandler.next_color(
-            mode_list[c_mode][0].color
-        )
+        mode_list[c_mode][0].color = colorhandler.next_color(mode_list[c_mode][0].color)
         parameters["mode" + str(c_mode) + "_color"] = mode_list[c_mode][0].color
         return
     elif pressed == "Left":
-        mode_list[c_mode][0].color = colorhandler.prev_color(
-            mode_list[c_mode][0].color
-        )
+        mode_list[c_mode][0].color = colorhandler.prev_color(mode_list[c_mode][0].color)
         parameters["mode" + str(c_mode) + "_color"] = mode_list[c_mode][0].color
         return
 

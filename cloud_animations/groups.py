@@ -59,6 +59,7 @@ def get_stars(count, length):
         star_set.append(s)
     return star_set
 
+
 clear_night = PixelMap(pixels, get_stars(18, len(pixels)), individual_pixels=True)
 cloudy25_night = PixelMap(pixels, get_stars(12, 32), individual_pixels=True)
 cloudy50_night = PixelMap(pixels, get_stars(8, 32), individual_pixels=True)
