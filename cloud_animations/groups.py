@@ -32,6 +32,14 @@ hatch_strips = PixelMap(
     [(24, 32), (16, 24), (8, 16), (0, 8), (44, 48), (40, 44), (36, 40), (32, 36)],
 )
 
+top_half = PixelSubset(pixels, 0, 32)
+bottom_half = PixelSubset(pixels, 32, 48)
+top_two = PixelSubset(pixels, 8, 24)
+bottom_six = PixelMap(pixels, [(0, 8), (24, 48)])
+top_center = PixelMap(pixels, [(10, 14), (18, 22)])
+bottom_heavy = PixelMap(pixels, [(0, 10), (22, 48)])
+
+
 sunny75 = PixelSubset(pixels, 8, 32)
 sunny50 = PixelSubset(pixels, 16, 32)
 sunny25 = PixelSubset(pixels, 24, 32)
@@ -42,15 +50,20 @@ top_half = PixelSubset(pixels, 0, 32)
 rain_pixels = PixelSubset(pixels, 32, 48)
 
 # Setup stars groups
-star_count = 12
-star_set = []
-while len(star_set) < star_count:
-    used = [star for star in star_set]
-    stars = [n for n in range(len(pixels)) if n not in used]
-    s = random.choice(stars)
-    star_set.append(s)
+def get_stars(count, length):
+    star_set = []
+    while len(star_set) < count:
+        used = [star for star in star_set]
+        stars = [n for n in range(length) if n not in used]
+        s = random.choice(stars)
+        star_set.append(s)
+    return star_set
 
-clear_night = PixelMap(pixels, star_set, individual_pixels=True)
+clear_night = PixelMap(pixels, get_stars(18, len(pixels)), individual_pixels=True)
+cloudy25_night = PixelMap(pixels, get_stars(12, 32), individual_pixels=True)
+cloudy50_night = PixelMap(pixels, get_stars(8, 32), individual_pixels=True)
+cloudy75_night = PixelMap(pixels, get_stars(5, 32), individual_pixels=True)
+cloudy100_night = PixelMap(pixels, get_stars(3, 32), individual_pixels=True)
 
 # Lightning Path Groups
 lightning_path_1 = PixelMap(
