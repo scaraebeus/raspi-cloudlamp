@@ -5,7 +5,7 @@ Color handler for raspi-cloudlamp
 from math import floor
 
 
-def next_color(rgb, step=30):
+def next_color(rgb, step=10):
     """Helper function to increase hue value from hsv.  Step is provided in degrees"""
     h, s, v = rgb_to_hsv(rgb)
     # Normalzie step value to range of 0 to 1
@@ -16,7 +16,7 @@ def next_color(rgb, step=30):
     return hsv_to_rgb((h, s, v))
 
 
-def prev_color(rgb, step=30):
+def prev_color(rgb, step=10):
     """Helper function to decrease hue value from hsv. Step is provided in degrees"""
     h, s, v = rgb_to_hsv(rgb)
     # Normalize step value to range of 0 to 1
@@ -24,6 +24,20 @@ def prev_color(rgb, step=30):
     h -= step
     if h < 0:
         h += 1
+    return hsv_to_rgb((h, s, v))
+
+
+def increase_saturation(rgb, step=0.2):
+    """Helper function to increase intensity by modifying the value from hsv"""
+    h, s, v = rgb_to_hsv(rgb)
+    s = min(s + step, 1)
+    return hsv_to_rgb((h, s, v))
+
+
+def decrease_saturation(rgb, step=0.2):
+    """Helper function to increase intensity by modifying the value from hsv"""
+    h, s, v = rgb_to_hsv(rgb)
+    s = max(0.2, s - step)
     return hsv_to_rgb((h, s, v))
 
 

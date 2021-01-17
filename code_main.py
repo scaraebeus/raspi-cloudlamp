@@ -112,6 +112,7 @@ def main():
             curr_mode = process_mode_change(curr_mode, pressed, mode)
             process_color_change(curr_mode, pressed, mode)
             process_intensity_change(curr_mode, pressed, mode)
+            process_saturation_change(curr_mode, pressed, mode)
 
             if curr_mode == 9:
                 process_pattern_change(curr_mode, pressed, mode, wth_list)
@@ -234,6 +235,23 @@ def process_intensity_change(c_mode, pressed, mode_list):
         return
     elif pressed == "Down":
         mode_list[c_mode][0].color = colorhandler.decrease_intensity(
+            mode_list[c_mode][0].color
+        )
+        parameters["mode" + str(c_mode) + "_color"] = mode_list[c_mode][0].color
+        return
+
+
+def process_saturation_change(c_mode, pressed, mode_list):
+    if not ((mode_list[c_mode][2] == "y") and (pressed in ["Vol_up", "Vol_down"])):
+        return
+    if pressed == "Vol_up":
+        mode_list[c_mode][0].color = colorhandler.increase_saturation(
+            mode_list[c_mode][0].color
+        )
+        parameters["mode" + str(c_mode) + "_color"] = mode_list[c_mode][0].color
+        return
+    elif pressed == "Vol_down":
+        mode_list[c_mode][0].color = colorhandler.decrease_saturation(
             mode_list[c_mode][0].color
         )
         parameters["mode" + str(c_mode) + "_color"] = mode_list[c_mode][0].color
