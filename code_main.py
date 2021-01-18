@@ -10,7 +10,6 @@ TODO:
 """
 
 # Standard library imports
-from random import randint
 import sys
 import signal
 from time import monotonic, sleep
@@ -29,7 +28,6 @@ from cloud_animations.animations import (
     reset_strip,
     weather_anim,
 )
-from cloud_animations.lightning_animations import lightning_list
 
 # Create and setup logger
 logger = get_logger(__name__)
@@ -70,10 +68,10 @@ def main():
     weather_check_interval = 3600
     daynight_check_interval = 21600
     save_interval = 900
-    next_update = monotonic()
-    next_weather_check = next_update + weather_check_interval
-    next_daynight_check = next_update + daynight_check_interval
-    next_save_check = next_update + save_interval
+    now = monotonic()
+    next_weather_check = now + weather_check_interval
+    next_daynight_check = now + daynight_check_interval
+    next_save_check = now + save_interval
 
     is_enabled = parameters["is_enabled"]
 
@@ -95,10 +93,6 @@ def main():
                         curr_mode, myWeather, mode, weather_anim, day_night
                     )
                     next_daynight_check = now + daynight_check_interval
-
-                next_update = cycle_lightning(
-                    curr_mode, myWeather.id, mode, lightning_list, next_update
-                )
 
                 if now > next_save_check:
                     save_state(parameters)
@@ -165,19 +159,6 @@ def process_daynight(c_mode, wth_cls, mode_list, anim_list, day_night):
 
     mode_list[c_mode][0] = anim_list[str(wth_cls.id)][day_night]
     return day_night
-
-
-def cycle_lightning(c_mode, wth_id, mode_list, anim_list, next_update):
-    """If c_mode is 8 (lightning mode) or c_mode is 0 (weather mode) and current weather is T-Storms, cycle lightning animations."""
-    if (c_mode == 8) or (c_mode == 0 and str(wth_id)[0] == "2"):
-        now = monotonic()
-        if now >= next_update:
-            mode_list[c_mode][0] = anim_list[randint(0, (len(anim_list) - 1))]
-            next_update = now + randint(1, 5)
-        if mode_list[c_mode][0].cycle_count >= 3:
-            mode_list[c_mode][0].cycle_count = 0
-            mode_list[c_mode][0] = reset_strip
-    return next_update
 
 
 def process_mode_change(c_mode, pressed, mode_list):

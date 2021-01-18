@@ -37,7 +37,8 @@ Implementation Notes
 """
 
 from adafruit_led_animation.animation import Animation
-from adafruit_led_animation.color import BLACK, calculate_intensity
+from adafruit_led_animation.color import calculate_intensity
+from . import DULL_WHITE
 
 
 class Comet(Animation):
@@ -76,6 +77,7 @@ class Comet(Animation):
         self._tail_length = tail_length
         self._color_step = 0.95 / tail_length
         self._comet_colors = None
+        self._background_color = DULL_WHITE
         self._computed_color = color
         self._num_pixels = len(pixel_object)
         self._direction = -1 if reverse else 1
@@ -91,7 +93,7 @@ class Comet(Animation):
     on_cycle_complete_supported = True
 
     def _set_color(self, color):
-        self._comet_colors = [BLACK]
+        self._comet_colors = [DULL_WHITE]
         for n in range(self._tail_length):
             self._comet_colors.append(
                 calculate_intensity(color, n * self._color_step + 0.05)

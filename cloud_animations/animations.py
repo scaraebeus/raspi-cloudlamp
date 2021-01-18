@@ -4,7 +4,6 @@ except lightning which is in lightning_animations module. """
 
 from adafruit_led_animation.group import AnimationGroup
 from adafruit_led_animation.color import (
-    RED,
     YELLOW,
     BLUE,
     WHITE,
@@ -39,7 +38,7 @@ from .groups import (
     top_center,
     bottom_heavy,
 )
-from .lightning_animations import lightning_list
+from .lightning_animations import lightningsequencerand
 from mylog import get_logger
 
 logger = get_logger(__name__)
@@ -83,6 +82,14 @@ rainlightnight = AnimationGroup(
     sync=False,
 )
 
+rainlightlightning = AnimationGroup(
+    lightningsequencerand,
+    Drops(
+        rain_pixels, speed=0.1, min_period=2, color=BLUE, count=4, background=DULL_WHITE
+    ),
+    sync=False,
+)
+
 rainheavy = AnimationGroup(
     Solid(top_half, color=DULL_WHITE),
     Drops(
@@ -109,6 +116,19 @@ rainheavynight = AnimationGroup(
     sync=False,
 )
 
+rainheavylightning = AnimationGroup(
+    lightningsequencerand,
+    Drops(
+        rain_pixels,
+        speed=0.1,
+        color=BLUE,
+        max_period=5,
+        count=10,
+        background=DULL_WHITE,
+    ),
+    sync=False,
+)
+
 rainveryheavy = AnimationGroup(
     Solid(top_half, color=DULL_WHITE),
     Drops(
@@ -124,6 +144,19 @@ rainveryheavy = AnimationGroup(
 
 rainveryheavynight = AnimationGroup(
     Solid(cloudy50_night, color=DULL_WHITE),
+    Drops(
+        rain_pixels,
+        speed=0.1,
+        color=BLUE,
+        max_period=4,
+        count=16,
+        background=DULL_WHITE,
+    ),
+    sync=False,
+)
+
+rainveryheavylightning = AnimationGroup(
+    lightningsequencerand,
     Drops(
         rain_pixels,
         speed=0.1,
@@ -174,19 +207,19 @@ snowveryheavy = AnimationGroup(
     sync=False,
 )
 
-solid = Solid(pixels, color=RED)
+solid = Solid(pixels, color=BLACK)
 solid.speed = 0.2
 rainbow = Rainbow(pixels, speed=0.1, period=2)
-pulse = Pulse(pixels, speed=0.1, period=6, color=RED)
-sparkle = Sparkle(pixels, speed=0.1, color=RED, num_sparkles=10)
+pulse = Pulse(pixels, speed=0.1, period=6, color=BLACK)
+sparkle = Sparkle(pixels, speed=0.1, color=BLACK, num_sparkles=10)
 r_sparkle = RainbowSparkle(pixels, speed=0.1, num_sparkles=15)
 
 c_scan = Comet(
-    cross_strips, speed=0.2, color=RED, tail_length=3, bounce=False, ring=True
+    cross_strips, speed=0.2, color=BLACK, tail_length=3, bounce=False, ring=True
 )
 
 h_scan = Comet(
-    hatch_strips, speed=0.2, color=RED, tail_length=4, bounce=False, ring=True
+    hatch_strips, speed=0.2, color=BLACK, tail_length=4, bounce=False, ring=True
 )
 
 reset_strip = Solid(pixels, color=BLACK)
@@ -200,6 +233,9 @@ wth_list = [
     rainlight,
     rainheavy,
     rainveryheavy,
+    rainlightlightning,
+    rainheavylightning,
+    rainveryheavylightning,
     clearnight,
     cloud25night,
     cloud50night,
@@ -211,6 +247,7 @@ wth_list = [
     snowlight,
     snowheavy,
     snowveryheavy,
+    lightningsequencerand,
 ]
 
 # Sub list [animation_object, can_change_color, can_change_intensity]
@@ -224,23 +261,23 @@ mode = [
     [r_sparkle, "n", "n"],  # 5: Rainbow Sparkle mode
     [c_scan, "y", "y"],  # 6: Line Scan mode - Can change color
     [h_scan, "y", "y"],  # 7: Grid Scan mode - Can change color
-    [lightning_list[0], "n", "n"],  # 8: Lightning mode - Can change color
+    [lightningsequencerand, "n", "n"],  # 8: Lightning mode - Can change color
     [wth_list[0], "n", "n"],  # 9: Weather demo mode - can cycle between patterns
 ]
 
 # Map openweathermap condition codes to weather animations.
 # List for each dict item is in the form [ day_animation, night_animation ]
 weather_anim = {
-    "200": [cloud100, cloud100night],  # T-Storm - light rain
-    "201": [cloud100, cloud100night],  # T-Storm - rain
-    "202": [cloud100, cloud100night],  # T-Storm - heavy rain
-    "210": [cloud100, cloud100night],  # Light T-Storm
-    "211": [cloud100, cloud100night],  # T-Storm
-    "212": [cloud100, cloud100night],  # Heavy T-Storm
-    "221": [cloud100, cloud100night],  # Ragged T-Storm
-    "230": [cloud100, cloud100night],  # T-Storm - light drizzle
-    "231": [cloud100, cloud100night],  # T-Storm - drizzle
-    "232": [cloud100, cloud100night],  # T-Storm - heavy drizzle
+    "200": [rainlightlightning, cloud100night],  # T-Storm - light rain
+    "201": [rainheavylightning, cloud100night],  # T-Storm - rain
+    "202": [rainveryheavylightning, cloud100night],  # T-Storm - heavy rain
+    "210": [lightningsequencerand, cloud100night],  # Light T-Storm
+    "211": [lightningsequencerand, cloud100night],  # T-Storm
+    "212": [lightningsequencerand, cloud100night],  # Heavy T-Storm
+    "221": [lightningsequencerand, cloud100night],  # Ragged T-Storm
+    "230": [rainlightlightning, cloud100night],  # T-Storm - light drizzle
+    "231": [rainlightlightning, cloud100night],  # T-Storm - drizzle
+    "232": [rainheavylightning, cloud100night],  # T-Storm - heavy drizzle
     "300": [rainlight, rainlightnight],  # Light drizzle
     "301": [rainlight, rainlightnight],  # Drizzle
     "302": [rainheavy, rainheavynight],  # Heavy drizzle

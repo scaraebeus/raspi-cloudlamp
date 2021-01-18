@@ -37,8 +37,8 @@ Implementation Notes
   https://circuitpython.org/downloads
 """
 
+from . import DULL_WHITE
 from cloud_animations.randcolorcycle import RandColorCycle
-from adafruit_led_animation.color import BLACK
 
 
 class LightningFlash(RandColorCycle):
@@ -49,17 +49,14 @@ class LightningFlash(RandColorCycle):
     :param color: Animation color in ``(r, g, b)`` tuple, or ``0x000000`` hex format.
     """
 
-    def __init__(
-        self, pixel_object, lower_speed, upper_speed, num_pixels, color, name=None
-    ):
+    def __init__(self, pixel_object, speed, num_pixels, color, name=None):
         super().__init__(
             pixel_object,
-            lower_speed,
-            upper_speed,
+            speed,
             num_pixels,
-            [color, BLACK],
+            [color, DULL_WHITE],
             name=name,
         )
 
     def _set_color(self, color):
-        self.colors = [color, BLACK]
+        self.colors = [color, DULL_WHITE]

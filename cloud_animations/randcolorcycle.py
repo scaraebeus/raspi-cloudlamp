@@ -43,7 +43,8 @@ Implementation Notes
 
 import random
 from adafruit_led_animation.animation import Animation
-from adafruit_led_animation.color import RAINBOW
+from adafruit_led_animation.color import WHITE
+from . import DULL_WHITE
 
 
 class RandColorCycle(Animation):
@@ -61,19 +62,17 @@ class RandColorCycle(Animation):
     def __init__(
         self,
         pixel_object,
-        lower_speed,
-        upper_speed,
+        speed=0.05,
         num_pixels=1,
-        colors=RAINBOW,
+        colors=[WHITE, DULL_WHITE],
         name=None,
     ):
         self.colors = colors
-        super().__init__(pixel_object, upper_speed, colors[0], name=name)
+        super().__init__(pixel_object, speed, colors[0], name=name)
         self._generator = self._color_generator()
         next(self._generator)
         self._pixels = []
-        self.lower_speed = lower_speed
-        self.upper_speed = upper_speed
+        self._max_speed = speed
         self._num_pixels = num_pixels
         self._get_pixels(self)
         self.add_cycle_complete_receiver(self._get_pixels)
@@ -84,7 +83,10 @@ class RandColorCycle(Animation):
         for pixel in self._pixels:
             self.pixel_object[pixel] = self.color
         next(self._generator)
-        self.speed = round(random.uniform(self.lower_speed, self.upper_speed), 2)
+        for pixel in range(len(self.pixel_object)):
+            if pixel not in self._pixels:
+                self.pixel_object[pixel] = self.colors[1]
+        self.speed = self._max_speed * random.randint(1, 4)
 
     def _color_generator(self):
         index = 0
@@ -101,6 +103,7 @@ class RandColorCycle(Animation):
             for _ in range(self._num_pixels)
         ]
         animation.notify_cycles = random.randint(1, 5)
+        animation.cycle_count = 0
 
     def reset(self):
         """
