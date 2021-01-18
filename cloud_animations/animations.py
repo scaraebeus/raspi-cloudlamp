@@ -83,6 +83,7 @@ rainlightnight = AnimationGroup(
 )
 
 rainlightlightning = AnimationGroup(
+    Solid(top_half, color=DULL_WHITE),
     lightningsequencerand,
     Drops(
         rain_pixels, speed=0.1, min_period=2, color=BLUE, count=4, background=DULL_WHITE
@@ -117,6 +118,7 @@ rainheavynight = AnimationGroup(
 )
 
 rainheavylightning = AnimationGroup(
+    Solid(top_half, color=DULL_WHITE),
     lightningsequencerand,
     Drops(
         rain_pixels,
@@ -156,6 +158,7 @@ rainveryheavynight = AnimationGroup(
 )
 
 rainveryheavylightning = AnimationGroup(
+    Solid(top_half, color=DULL_WHITE),
     lightningsequencerand,
     Drops(
         rain_pixels,
